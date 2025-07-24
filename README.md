@@ -1,1 +1,1 @@
-# MVT
+# Margin Vision Transformer
