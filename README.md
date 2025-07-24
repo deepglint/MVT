@@ -3,7 +3,7 @@
 
 ## MVT-1.5 RICE  
 
-<img width="2714" height="1688" alt="image" src="https://github.com/user-attachments/assets/322f8b0c-550d-4881-b62a-8c5be7529145" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/180a8a03-3f65-4c52-91ae-76f7e7eb02fa" />
 
 
 
