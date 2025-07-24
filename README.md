@@ -1,9 +1,9 @@
 # Margin based Vision Transformer
 
 
-1. MVT-1.5 RICE  
-2. MVT-1.1 MLCD  
-3. MVT-1.0 UNICOM   
+## MVT-1.5 RICE  
+## MVT-1.1 MLCD  
+## MVT-1.0 UNICOM  
 
 **The authors are from DeepGlint team and Huawei London Research Institute.**
 
