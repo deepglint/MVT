@@ -5,8 +5,11 @@
 2. MVT-1.1 MLCD  
 3. MVT-1.0 UNICOM   
 
+**The authors are from DeepGlint team and Huawei London Research Institute.**
 
 ## Citation
+
+
 
 ```latex
 @inproceedings{yinxie_2024_rice,
