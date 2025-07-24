@@ -1,1 +1,1 @@
-# Margin Vision Transformer
+# **M**argin **V**ision **T**ransformer
