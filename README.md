@@ -2,6 +2,11 @@
 
 
 ## MVT-1.5 RICE  
+
+<img width="1452" height="908" alt="image" src="https://github.com/user-attachments/assets/8a4a061b-4ce8-456e-a3ee-1f3a50ee2b60" />
+
+
+
 ## [MVT-1.1 MLCD](https://github.com/deepglint/unicom)
 ## [MVT-1.0 UNICOM](https://github.com/deepglint/unicom)
 
