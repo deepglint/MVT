@@ -5,6 +5,36 @@
 
  [[Model]](https://huggingface.co/DeepGlint-AI/rice-vit-large-patch14-560) [[Paper]](https://github.com/deepglint/MVT/blob/main/paper.pdf) 
 
+### How to use
+
+```python
+# pip install torch transformers
+# git clone https://github.com/deepglint/unicom
+# cd unicom/mlcd
+
+from vit_rope2d_hf import MLCDVisionModel
+from transformers import CLIPImageProcessor
+from PIL import Image
+import requests
+import torch
+
+# Load model and processor
+model = MLCDVisionModel.from_pretrained("DeepGlint-AI/rice-vit-large-patch14-560")
+processor = CLIPImageProcessor.from_pretrained("DeepGlint-AI/rice-vit-large-patch14-560")
+
+# Process single image
+url = "http://images.cocodataset.org/val2017/000000039769.jpg"
+image = Image.open(requests.get(url, stream=True).raw)
+inputs = processor(images=image, return_tensors="pt")
+
+# Get visual features
+with torch.no_grad():
+    outputs = model(**inputs)
+features = outputs.last_hidden_state
+
+print(f"Extracted features shape: {features.shape}")
+```
+
 
 ###  Highlights
 ![470695215-38e89eea-8a73-4e3f-b43a-fa1ea6e32f0f](https://github.com/user-attachments/assets/e0de38b3-b20a-491e-9382-1839e9968481)
@@ -22,6 +52,14 @@ within the image using a single forward pass. The model jointly captures both ge
 
 Comprehensive performance comparison of RICE with state-of-the-art vision encoders. For all experiments within the LLaVA-NeXT framework, we adopt a high-resolution tiling strategy: each input image is divided into a 2×2+1 grid of crops, where each crop matches the pre-training resolution of the backbone model (e.g., 336px, 378px, or 560px). 
 
+## Visualize Semantic Features
+
+![screenshot-20250725-232729](https://github.com/user-attachments/assets/0ff3b764-c5b6-4a10-a63c-89ccbc99d06b)
+
+Using 2048-resolution images as input to a ViT-B/16 model, we project token features onto RGB channels via
+PCA to visualize the semantic structure. Sequential frames (arranged vertically) illustrate the evolution of model attention, consistently
+highlighting salient objects across time. The visualization reveals stable color patterns for tracked entities such as ice skaters, deers,
+motorcyclists, and cyclists, demonstrating the model’s ability to maintain semantic focus throughout the sequence.
 
 
 ## [MVT-1.1 MLCD](https://github.com/deepglint/unicom)
