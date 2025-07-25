@@ -1,12 +1,12 @@
 # Margin based Vision Transformer
 
 
-## MVT-1.5 RICE  
+## MVT-1.5 RICE 
 
-![Model](https://huggingface.co/DeepGlint-AI/rice-vit-large-patch14-560) ![Paper](https://github.com/deepglint/MVT/blob/main/paper.pdf)
+ [[Model]](https://huggingface.co/DeepGlint-AI/rice-vit-large-patch14-560) [[Paper]](https://github.com/deepglint/MVT/blob/main/paper.pdf) 
 
 
-### 💡 Highlights
+###  Highlights
 ![470695215-38e89eea-8a73-4e3f-b43a-fa1ea6e32f0f](https://github.com/user-attachments/assets/e0de38b3-b20a-491e-9382-1839e9968481)
 
 
@@ -15,7 +15,7 @@ RICE efficiently processes diverse semantic regions
 within the image using a single forward pass. The model jointly captures both general visual semantics (objects) and OCR semantics
 (texts), seamlessly integrating them into a unified representation.
 
-### 💡 Experiments
+###  Experiments
 
 ![470696193-65b351ac-9399-4dac-8999-b4412286731a](https://github.com/user-attachments/assets/cd66223f-1757-4ff4-859c-19dd25f1246d)
 
