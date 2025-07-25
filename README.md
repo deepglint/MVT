@@ -71,7 +71,7 @@ motorcyclists, and cyclists, demonstrating the model’s ability to maintain sem
 
 
 ```latex
-@inproceedings{yinxie_2024_rice,
+@inproceedings{yinxie_2025_rice,
   title={Region-based Cluster Discrimination for Visual Representation Learning},
   author={Xie, Yin and Yang, Kaicheng and An, Xiang and Wu, Kun and Zhao, Yongle and Deng, Weimo and Ran, Zimin and Wang, Yumeng and Feng, Ziyong And Roy, Miles And Ismail, Elezi And Deng, Jiankang},
   booktitle={ICCV},
