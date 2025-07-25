@@ -3,6 +3,8 @@
 
 ## MVT-1.5 RICE  
 
+![Model](https://huggingface.co/DeepGlint-AI/rice-vit-large-patch14-560) ![Paper](https://github.com/deepglint/MVT/blob/main/paper.pdf)
+
 
 ### 💡 Highlights
 ![470695215-38e89eea-8a73-4e3f-b43a-fa1ea6e32f0f](https://github.com/user-attachments/assets/e0de38b3-b20a-491e-9382-1839e9968481)
