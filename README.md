@@ -5,7 +5,9 @@
 
 
 ### 💡 Highlights
-<img width="3121" height="790" alt="image" src="https://github.com/user-attachments/assets/38e89eea-8a73-4e3f-b43a-fa1ea6e32f0f" />
+![470695215-38e89eea-8a73-4e3f-b43a-fa1ea6e32f0f](https://github.com/user-attachments/assets/e0de38b3-b20a-491e-9382-1839e9968481)
+
+
 
 RICE efficiently processes diverse semantic regions
 within the image using a single forward pass. The model jointly captures both general visual semantics (objects) and OCR semantics
@@ -13,7 +15,8 @@ within the image using a single forward pass. The model jointly captures both ge
 
 ### 💡 Experiments
 
-<img width="3182" height="1656" alt="image" src="https://github.com/user-attachments/assets/65b351ac-9399-4dac-8999-b4412286731a" />
+![470696193-65b351ac-9399-4dac-8999-b4412286731a](https://github.com/user-attachments/assets/cd66223f-1757-4ff4-859c-19dd25f1246d)
+
 
 Comprehensive performance comparison of RICE with state-of-the-art vision encoders. For all experiments within the LLaVA-NeXT framework, we adopt a high-resolution tiling strategy: each input image is divided into a 2×2+1 grid of crops, where each crop matches the pre-training resolution of the backbone model (e.g., 336px, 378px, or 560px). 
 
