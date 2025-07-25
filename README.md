@@ -3,8 +3,19 @@
 
 ## MVT-1.5 RICE  
 
-<img width="2276" height="1410" alt="image" src="https://github.com/user-attachments/assets/f66d639a-c057-4662-987b-a0a905696919" />
 
+### 💡 Highlights
+<img width="3121" height="790" alt="image" src="https://github.com/user-attachments/assets/38e89eea-8a73-4e3f-b43a-fa1ea6e32f0f" />
+
+RICE efficiently processes diverse semantic regions
+within the image using a single forward pass. The model jointly captures both general visual semantics (objects) and OCR semantics
+(texts), seamlessly integrating them into a unified representation.
+
+### 💡 Experiments
+
+<img width="3182" height="1656" alt="image" src="https://github.com/user-attachments/assets/65b351ac-9399-4dac-8999-b4412286731a" />
+
+Comprehensive performance comparison of RICE with state-of-the-art vision encoders. For all experiments within the LLaVA-NeXT framework, we adopt a high-resolution tiling strategy: each input image is divided into a 2×2+1 grid of crops, where each crop matches the pre-training resolution of the backbone model (e.g., 336px, 378px, or 560px). 
 
 
 
