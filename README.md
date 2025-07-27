@@ -71,6 +71,16 @@ motorcyclists, and cyclists, demonstrating the model’s ability to maintain sem
 
 **The authors are from DeepGlint team and Huawei London Research Institute.**
 
+## ModelZoo
+
+| Model | Download |
+|-------|-------------|
+| RICE-ViT-L-14-560px | [huggingface](https://huggingface.co/DeepGlint-AI/rice-vit-large-patch14-560) |
+| MLCD-ViT-bigG-14-448px | [huggingface](https://huggingface.co/DeepGlint-AI/mlcd-vit-bigG-patch14-448) |
+| MLCD-ViT-L-14-336px | [huggingface](https://huggingface.co/DeepGlint-AI/mlcd-vit-large-patch14-336) |
+| MLCD-ViT-B-32-224px | [huggingface](https://huggingface.co/DeepGlint-AI/mlcd-vit-base-patch32-224) |
+
+
 ## Citation
 
 
