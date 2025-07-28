@@ -28,7 +28,10 @@ Comprehensive performance comparison of RICE with state-of-the-art vision encode
 
 ### How to use
 
+#### 1. Standard Usage
+
 ```python
+# Install dependencies
 # pip install torch transformers
 # git clone https://github.com/deepglint/unicom
 # cd unicom/mlcd
@@ -43,15 +46,42 @@ import torch
 model = MLCDVisionModel.from_pretrained("DeepGlint-AI/rice-vit-large-patch14-560")
 processor = CLIPImageProcessor.from_pretrained("DeepGlint-AI/rice-vit-large-patch14-560")
 
-# Process single image
+# Load and process an image
 url = "http://images.cocodataset.org/val2017/000000039769.jpg"
 image = Image.open(requests.get(url, stream=True).raw)
 inputs = processor(images=image, return_tensors="pt")
 
-# Get visual features
+# Extract visual features
 with torch.no_grad():
     outputs = model(**inputs)
 features = outputs.last_hidden_state
+
+print(f"Extracted features shape: {features.shape}")
+```
+
+#### 2. Using HuggingFace Transformers >= 4.51.3
+
+```python
+# pip install torch transformers>=4.51.3
+
+from transformers import AutoProcessor, AutoModel
+from PIL import Image
+import requests
+import torch
+
+# Load model and processor
+model = AutoModel.from_pretrained("DeepGlint-AI/rice-vit-large-patch14-560")
+processor = AutoProcessor.from_pretrained("DeepGlint-AI/rice-vit-large-patch14-560")
+
+# Load and process an image
+url = "http://images.cocodataset.org/val2017/000000039769.jpg"
+image = Image.open(requests.get(url, stream=True).raw)
+inputs = processor(images=image, return_tensors="pt")
+
+# Extract visual features
+with torch.no_grad():
+    outputs = model(**inputs)
+features = outputs.last_hidden_state[0]
 
 print(f"Extracted features shape: {features.shape}")
 ```
