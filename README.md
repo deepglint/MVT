@@ -6,9 +6,9 @@
 
 
 ## Contents
-- [MVT-1.5 RICE](#mvt-15-rice)
-- [MVT-1.1 MLCD](#mvt-11-mlcd)
-- [MVT-1.0 UNICOM](#mvt-10-unicom)
+- [MVT-1.5 RICE (ICCV 2025)](#mvt-15-rice)
+- [MVT-1.1 MLCD (ECCV 2024)](#mvt-11-mlcd)
+- [MVT-1.0 UNICOM (ICLR 2023)](#mvt-10-unicom)
 
 ## MVT-1.5 RICE 
 
@@ -26,8 +26,7 @@
 ![470695215-38e89eea-8a73-4e3f-b43a-fa1ea6e32f0f](https://github.com/user-attachments/assets/e0de38b3-b20a-491e-9382-1839e9968481)
 
 
-RICE efficiently processes diverse semantic regions
-within the image using a single forward pass. The model jointly captures both general visual semantics (objects) and OCR semantics
+RICE efficiently processes diverse semantic regions within the image using a single forward pass. The model jointly captures both general visual semantics (objects) and OCR semantics
 (texts), seamlessly integrating them into a unified representation.
 
 ###  Experiments
