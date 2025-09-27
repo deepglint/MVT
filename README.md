@@ -109,8 +109,6 @@ motorcyclists, and cyclists, demonstrating the model’s ability to maintain sem
 ## [MVT-1.1 MLCD](https://github.com/deepglint/unicom)
 ## [MVT-1.0 UNICOM](https://github.com/deepglint/unicom)
 
-**The authors are from DeepGlint team, Huawei London Research Center and Imperial College London.**
-
 ## ModelZoo
 
 | Model | Download |
