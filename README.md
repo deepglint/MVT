@@ -151,6 +151,36 @@ All models are available on Hugging Face for easy integration.
 
 ---
 
+## ❓ FAQ
+
+### Q1: How can I reproduce the ViT-L-14-336px results from the paper?
+
+**A:** RICE-ViT uses **RoPE2D** (Rotary Position Embedding 2D), which provides flexible resolution support. While the `rice-vit-large-patch14-560` model is trained at 560px, you can directly input images at 336px resolution—simply set `crop_size` and `shortest_edge` to 336 in your `preprocessor_config.json`, and the model will process the smaller resolution without any architectural changes.
+
+However, please note that **you cannot exactly reproduce the 336px results from the paper** using the 560px RICE-ViT checkpoint. The results may be slightly lower because the ViT-L-14-336px model in the paper was trained specifically and exclusively at 336px resolution. With the publicly available 560px checkpoint, you can only reproduce the 560px results reported in the paper.
+
+If you need to match 336px performance exactly, you would need a checkpoint that was specifically trained at 336px resolution.
+
+### Q2: Which MLCDVisionModel should I use - the one from LLaVA-NEXT or the one from Transformers?
+
+**A:** Both versions are equivalent and produce the same results. You can use either:
+
+1. **From LLaVA-NEXT** (via `unicom/mlcd/vit_rope2d_hf.py`):
+   ```python
+   from vit_rope2d_hf import MLCDVisionModel
+   model = MLCDVisionModel.from_pretrained("DeepGlint-AI/rice-vit-large-patch14-560")
+   ```
+
+2. **From Transformers** (≥4.51.3):
+   ```python
+   from transformers import AutoModel
+   model = AutoModel.from_pretrained("DeepGlint-AI/rice-vit-large-patch14-560")
+   ```
+
+The model architecture and weights are identical, so feel free to use whichever is more convenient for your workflow.
+
+---
+
 ## 📝 Citation
 
 If you find this work useful, please cite our papers:
