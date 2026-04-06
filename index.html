@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RICE: Region-based Cluster Discrimination for Visual Representation Learning</title>
+    <meta name="description" content="RICE (MVT-1.5) - Region-based Cluster Discrimination for Visual Representation Learning. Accepted to ICCV 2025.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Academicons & Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* ========== CSS Variables ========== */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --accent: #7c3aed;
+            --accent-light: #ede9fe;
+            --bg: #ffffff;
+            --bg-alt: #f8fafc;
+            --bg-code: #1e293b;
+            --text: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.2s ease;
+            --max-width: 1100px;
+        }
+
+        /* ========== Reset & Base ========== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* ========== Navigation ========== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .navbar-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .navbar-logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-logo span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.25rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 0.875rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* ========== Hero Section ========== */
+        .hero {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: linear-gradient(180deg, var(--bg-alt) 0%, var(--bg) 100%);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 100px;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-badge i {
+            font-size: 0.75rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 4vw, 3.25rem);
+            font-weight: 800;
+            line-height: 1.15;
+            color: var(--text);
+            max-width: 900px;
+            margin: 0 auto 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto 1rem;
+            font-weight: 400;
+        }
+
+        .hero-venue {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .hero-venue strong {
+            color: var(--primary);
+        }
+
+        /* Author List */
+        .authors {
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .authors a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .authors a:hover {
+            color: var(--primary);
+        }
+
+        .affiliations {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.4rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .btn i, .btn .ai {
+            font-size: 1.1rem;
+        }
+
+        /* ========== Sections ========== */
+        section {
+            padding: 4rem 2rem;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
+        .section-divider {
+            width: 48px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+            margin: 1rem auto 0;
+        }
+
+        /* ========== Abstract ========== */
+        .abstract-section {
+            background: var(--bg-alt);
+        }
+
+        .abstract-content {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.05rem;
+            line-height: 1.85;
+            color: var(--text-secondary);
+            text-align: justify;
+        }
+
+        .abstract-content p + p {
+            margin-top: 1rem;
+        }
+
+        /* ========== Key Features ========== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-icon.blue { background: var(--primary-light); color: var(--primary); }
+        .feature-icon.purple { background: var(--accent-light); color: var(--accent); }
+        .feature-icon.green { background: #dcfce7; color: #16a34a; }
+
+        .feature-card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ========== Figure Sections ========== */
+        .figure-container {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .figure-container img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .figure-caption {
+            text-align: center;
+            margin-top: 1.25rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            padding: 0 1rem;
+        }
+
+        .figure-caption strong {
+            color: var(--text);
+        }
+
+        /* ========== Results Table ========== */
+        .results-section {
+            background: var(--bg-alt);
+        }
+
+        .results-image {
+            max-width: 950px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .results-image img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .results-note {
+            text-align: center;
+            margin-top: 1.25rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ========== Model Zoo ========== */
+        .model-table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .model-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .model-table thead {
+            background: var(--bg-alt);
+        }
+
+        .model-table th {
+            padding: 0.875rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .model-table td {
+            padding: 0.875rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .model-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .model-table tbody tr:hover {
+            background: var(--bg-alt);
+        }
+
+        .model-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .model-badge {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-new {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .badge-stable {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .download-link:hover {
+            color: var(--primary-dark);
+        }
+
+        /* ========== Code Section ========== */
+        .code-tabs {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: -1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .code-tab {
+            padding: 0.6rem 1.25rem;
+            background: transparent;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .code-tab.active {
+            background: var(--bg-code);
+            color: #e2e8f0;
+            border-color: var(--bg-code);
+        }
+
+        .code-tab:not(.active):hover {
+            color: var(--text);
+        }
+
+        .code-block-wrapper {
+            position: relative;
+        }
+
+        .code-block {
+            background: var(--bg-code);
+            border-radius: 0 var(--radius) var(--radius) var(--radius);
+            padding: 1.5rem;
+            overflow-x: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.8rem;
+            line-height: 1.65;
+            color: #e2e8f0;
+        }
+
+        .code-block .comment { color: #64748b; }
+        .code-block .keyword { color: #c084fc; }
+        .code-block .string { color: #34d399; }
+        .code-block .function { color: #60a5fa; }
+        .code-block .variable { color: #fbbf24; }
+        .code-block .builtin { color: #f472b6; }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            border: none;
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .code-panel {
+            display: none;
+        }
+
+        .code-panel.active {
+            display: block;
+        }
+
+        /* ========== Citation ========== */
+        .citation-section {
+            background: var(--bg-alt);
+        }
+
+        .citation-cards {
+            display: grid;
+            gap: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .citation-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .citation-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.875rem 1.25rem;
+            background: var(--bg-alt);
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .citation-header:hover {
+            background: var(--primary-light);
+        }
+
+        .citation-header h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .citation-header .venue-tag {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .venue-iccv { background: #dbeafe; color: #1d4ed8; }
+        .venue-eccv { background: #dcfce7; color: #16a34a; }
+        .venue-iclr { background: #ffedd5; color: #ea580c; }
+
+        .citation-body {
+            padding: 1rem 1.25rem;
+        }
+
+        .citation-body pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            line-height: 1.55;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .citation-copy {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: var(--transition);
+        }
+
+        .citation-copy:hover {
+            color: var(--primary);
+        }
+
+        /* ========== Timeline ========== */
+        .timeline {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            border-radius: 1px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 1.5rem;
+            padding-bottom: 2rem;
+            position: relative;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
+            flex-shrink: 0;
+            margin-top: 0.3rem;
+            margin-left: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-date {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-text {
+            font-size: 0.925rem;
+            color: var(--text-secondary);
+        }
+
+        .timeline-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .timeline-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== Footer ========== */
+        .footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-note {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ========== Responsive ========== */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 7rem 1.25rem 3rem;
+            }
+
+            section {
+                padding: 3rem 1.25rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .figure-container {
+                padding: 1rem;
+            }
+
+            .code-block {
+                padding: 1rem;
+                border-radius: 0 8px 8px 8px;
+            }
+        }
+
+        /* ========== Scroll Animations ========== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== Navigation ========== -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="#" class="navbar-logo">
+                🌾 <span>RiceViT</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#abstract">Abstract</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#results">Results</a></li>
+                <li><a href="#visualization">Visualization</a></li>
+                <li><a href="#models">Models</a></li>
+                <li><a href="#code">Code</a></li>
+                <li><a href="#citation">Citation</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ========== Hero ========== -->
+    <header class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <i class="fas fa-award"></i>
+                Accepted to ICCV 2025
+            </div>
+            <h1>
+                <span class="highlight">RICE</span>: Region-based Cluster Discrimination<br>
+                for Visual Representation Learning
+            </h1>
+            <p class="hero-subtitle">
+                MVT-1.5 — A novel vision encoder that jointly captures general visual semantics, OCR semantics, and unified representations in a single forward pass.
+            </p>
+
+            <div class="authors">
+                <a href="#">Yin Xie</a><sup>*</sup>,
+                <a href="#">Kaicheng Yang</a><sup>*</sup>,
+                <a href="#">Xiang An</a>,
+                <a href="#">Kun Wu</a>,
+                <a href="#">Yongle Zhao</a>,
+                <a href="#">Weimo Deng</a>,
+                <a href="#">Zimin Ran</a>,
+                <a href="#">Yumeng Wang</a>,
+                <a href="#">Ziyong Feng</a>,
+                <a href="#">Miles Roy</a>,
+                <a href="#">Elezi Ismail</a>,
+                <a href="#">Jiankang Deng</a>
+                <div class="affiliations">
+                    DeepGlint &nbsp;·&nbsp; Imperial College London
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <a href="https://arxiv.org/abs/2507.20025" class="btn btn-primary" target="_blank">
+                    <i class="ai ai-arxiv"></i> Paper
+                </a>
+                <a href="https://huggingface.co/DeepGlint-AI/rice-vit-large-patch14-560" class="btn btn-outline" target="_blank">
+                    🤗 Model
+                </a>
+                <a href="https://github.com/deepglint/unicom" class="btn btn-outline" target="_blank">
+                    <i class="fab fa-github"></i> Code
+                </a>
+                <a href="https://huggingface.co/DeepGlint-AI" class="btn btn-outline" target="_blank">
+                    🤗 Model Zoo
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== News Timeline ========== -->
+    <section id="news">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Latest Updates</div>
+                <h2 class="section-title">📰 News</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="timeline fade-in">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">November 2025</div>
+                        <div class="timeline-text">
+                            🎉 MVT-1.5 (<strong>RICE</strong>) accepted to <strong>ICCV 2025</strong>!
+                            <a href="https://arxiv.org/abs/2507.20025">[Paper]</a>
+                            <a href="https://huggingface.co/DeepGlint-AI/rice-vit-large-patch14-560">[Model]</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot" style="background: #16a34a; box-shadow: 0 0 0 2px #16a34a;"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date" style="color: #16a34a;">July 2024</div>
+                        <div class="timeline-text">
+                            🎉 MVT-1.1 (<strong>MLCD</strong>) accepted to <strong>ECCV 2024</strong>!
+                            <a href="https://github.com/deepglint/unicom">[Code]</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot" style="background: #ea580c; box-shadow: 0 0 0 2px #ea580c;"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date" style="color: #ea580c;">January 2023</div>
+                        <div class="timeline-text">
+                            🎉 MVT-1.0 (<strong>UNICOM</strong>) accepted to <strong>ICLR 2023</strong>!
+                            <a href="https://github.com/deepglint/unicom">[Code]</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Abstract ========== -->
+    <section id="abstract" class="abstract-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Overview</div>
+                <h2 class="section-title">Abstract</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="abstract-content fade-in">
+                <p>
+                    The <strong>Margin-based Vision Transformer (MVT)</strong> series represents a family of state-of-the-art vision encoders designed for universal visual representation learning. The latest version, <strong>RICE (Region-based Cluster Discrimination)</strong>, advances visual understanding by processing diverse semantic regions within images using a single forward pass.
+                </p>
+                <p>
+                    RICE introduces a novel approach to visual representation learning that jointly captures <strong>general visual semantics</strong> (objects, scenes), <strong>OCR semantics</strong> (text within images), and <strong>unified representations</strong> that seamlessly integrate both modalities. This enables superior performance across multiple vision tasks including image retrieval, visual question answering, and multimodal understanding.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Key Features ========== -->
+    <section id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Highlights</div>
+                <h2 class="section-title">Key Features</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon blue">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3>Region-based Processing</h3>
+                    <p>Processes diverse semantic regions within images — including objects, scenes, and text — using a single efficient forward pass through the vision transformer.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon purple">
+                        <i class="fas fa-font"></i>
+                    </div>
+                    <h3>Joint OCR & Visual Semantics</h3>
+                    <p>Uniquely captures both general visual semantics and OCR semantics in a unified representation, enabling richer multimodal understanding of image content.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon green">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>State-of-the-Art Performance</h3>
+                    <p>Achieves superior results across multiple vision benchmarks including image retrieval, VQA, and multimodal understanding tasks using the LLaVA-NeXT framework.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Architecture ========== -->
+    <section id="architecture" class="abstract-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Method</div>
+                <h2 class="section-title">Architecture</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="figure-container fade-in">
+                <img src="https://github.com/user-attachments/assets/e0de38b3-b20a-491e-9382-1839e9968481"
+                     alt="RICE Architecture Diagram"
+                     loading="lazy">
+                <p class="figure-caption">
+                    <strong>Figure 1:</strong> RICE architecture efficiently processes diverse semantic regions within images using region-based cluster discrimination. The model jointly captures general visual semantics, OCR semantics, and unified representations in a single forward pass.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Results ========== -->
+    <section id="results" class="results-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Evaluation</div>
+                <h2 class="section-title">Experimental Results</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="abstract-content fade-in" style="margin-bottom: 2rem;">
+                <p style="text-align: center;">
+                    RICE demonstrates state-of-the-art performance across multiple vision benchmarks. Using the LLaVA-NeXT framework with a high-resolution tiling strategy (2×2+1 grid), RICE achieves superior results compared to existing vision encoders.
+                </p>
+            </div>
+            <div class="results-image fade-in">
+                <img src="https://github.com/user-attachments/assets/cd66223f-1757-4ff4-859c-19dd25f1246d"
+                     alt="Experimental Results Table"
+                     loading="lazy">
+                <p class="results-note">
+                    <strong>Table 1:</strong> Comprehensive performance comparison of RICE with state-of-the-art vision encoders. Each input image is divided into a 2×2+1 grid of crops matching the pre-training resolution (e.g., 336px, 378px, or 560px).
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Visualization ========== -->
+    <section id="visualization">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Qualitative Analysis</div>
+                <h2 class="section-title">🎨 Visualization</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="figure-container fade-in">
+                <img src="https://github.com/user-attachments/assets/0ff3b764-c5b6-4a10-a63c-89ccbc99d06b"
+                     alt="Semantic Feature Visualization"
+                     loading="lazy">
+                <p class="figure-caption">
+                    <strong>Figure 2:</strong> Semantic feature visualization using 2048-resolution images as input to ViT-B/16. Token features are projected onto RGB channels via PCA. Sequential frames (arranged vertically) show consistent attention on salient objects (ice skaters, deers, motorcyclists, cyclists), with stable color patterns maintained throughout the sequence.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Model Zoo ========== -->
+    <section id="models" class="abstract-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Pretrained Models</div>
+                <h2 class="section-title">📦 Model Zoo</h2>
+                <div class="section-divider"></div>
+            </div>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem;">
+                All models are available on Hugging Face for easy integration into your projects.
+            </p>
+            <div class="model-table-wrapper fade-in">
+                <table class="model-table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Version</th>
+                            <th>Resolution</th>
+                            <th>Patch Size</th>
+                            <th>Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="model-name">RICE-ViT-L-14</span></td>
+                            <td><span class="model-badge badge-new">MVT-1.5</span></td>
+                            <td>560px</td>
+                            <td>14</td>
+                            <td>
+                                <a href="https://huggingface.co/DeepGlint-AI/rice-vit-large-patch14-560" class="download-link" target="_blank">
+                                    🤗 HuggingFace <i class="fas fa-external-link-alt" style="font-size: 0.7rem;"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">MLCD-ViT-bigG-14</span></td>
+                            <td><span class="model-badge badge-stable">MVT-1.1</span></td>
+                            <td>448px</td>
+                            <td>14</td>
+                            <td>
+                                <a href="https://huggingface.co/DeepGlint-AI/mlcd-vit-bigG-patch14-448" class="download-link" target="_blank">
+                                    🤗 HuggingFace <i class="fas fa-external-link-alt" style="font-size: 0.7rem;"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">MLCD-ViT-L-14</span></td>
+                            <td><span class="model-badge badge-stable">MVT-1.1</span></td>
+                            <td>336px</td>
+                            <td>14</td>
+                            <td>
+                                <a href="https://huggingface.co/DeepGlint-AI/mlcd-vit-large-patch14-336" class="download-link" target="_blank">
+                                    🤗 HuggingFace <i class="fas fa-external-link-alt" style="font-size: 0.7rem;"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">MLCD-ViT-B-32</span></td>
+                            <td><span class="model-badge badge-stable">MVT-1.1</span></td>
+                            <td>224px</td>
+                            <td>32</td>
+                            <td>
+                                <a href="https://huggingface.co/DeepGlint-AI/mlcd-vit-base-patch32-224" class="download-link" target="_blank">
+                                    🤗 HuggingFace <i class="fas fa-external-link-alt" style="font-size: 0.7rem;"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Code ========== -->
+    <section id="code">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Getting Started</div>
+                <h2 class="section-title">🚀 Usage</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="code-tabs">
+                    <button class="code-tab active" data-tab="standard" type="button">Standard</button>
+                    <button class="code-tab" data-tab="huggingface" type="button">HuggingFace</button>
+                </div>
+
+                <!-- Standard Usage -->
+                <div class="code-panel active" id="panel-standard">
+                    <div class="code-block-wrapper">
+                        <div class="code-block">
+                            <button class="copy-btn" data-target="code-standard" type="button"><i class="fas fa-copy"></i> Copy</button>
+                            <pre id="code-standard"><span class="comment"># Install dependencies</span>
+<span class="comment"># pip install torch transformers</span>
+<span class="comment"># git clone https://github.com/deepglint/unicom</span>
+<span class="comment"># cd unicom/mlcd</span>
+
+<span class="keyword">from</span> vit_rope2d_hf <span class="keyword">import</span> MLCDVisionModel
+<span class="keyword">from</span> transformers <span class="keyword">import</span> CLIPImageProcessor
+<span class="keyword">from</span> PIL <span class="keyword">import</span> Image
+<span class="keyword">import</span> requests
+<span class="keyword">import</span> torch
+
+<span class="comment"># Load model and processor</span>
+model = <span class="function">MLCDVisionModel.from_pretrained</span>(<span class="string">"DeepGlint-AI/rice-vit-large-patch14-560"</span>)
+processor = <span class="function">CLIPImageProcessor.from_pretrained</span>(<span class="string">"DeepGlint-AI/rice-vit-large-patch14-560"</span>)
+
+<span class="comment"># Load and process an image</span>
+url = <span class="string">"http://images.cocodataset.org/val2017/000000039769.jpg"</span>
+image = <span class="function">Image.open</span>(<span class="function">requests.get</span>(url, stream=<span class="builtin">True</span>).raw)
+inputs = <span class="function">processor</span>(images=image, return_tensors=<span class="string">"pt"</span>)
+
+<span class="comment"># Extract visual features</span>
+<span class="keyword">with</span> <span class="function">torch.no_grad</span>():
+    outputs = <span class="function">model</span>(**inputs)
+features = outputs.last_hidden_state
+
+<span class="function">print</span>(<span class="string">f"Extracted features shape: {features.shape}"</span>)</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HuggingFace Usage -->
+                <div class="code-panel" id="panel-huggingface">
+                    <div class="code-block-wrapper">
+                        <div class="code-block">
+                            <button class="copy-btn" data-target="code-huggingface" type="button"><i class="fas fa-copy"></i> Copy</button>
+                            <pre id="code-huggingface"><span class="comment"># pip install torch transformers&gt;=4.51.3</span>
+
+<span class="keyword">from</span> transformers <span class="keyword">import</span> AutoProcessor, AutoModel
+<span class="keyword">from</span> PIL <span class="keyword">import</span> Image
+<span class="keyword">import</span> requests
+<span class="keyword">import</span> torch
+
+<span class="comment"># Load model and processor</span>
+model = <span class="function">AutoModel.from_pretrained</span>(<span class="string">"DeepGlint-AI/rice-vit-large-patch14-560"</span>)
+processor = <span class="function">AutoProcessor.from_pretrained</span>(<span class="string">"DeepGlint-AI/rice-vit-large-patch14-560"</span>)
+
+<span class="comment"># Load and process an image</span>
+url = <span class="string">"http://images.cocodataset.org/val2017/000000039769.jpg"</span>
+image = <span class="function">Image.open</span>(<span class="function">requests.get</span>(url, stream=<span class="builtin">True</span>).raw)
+inputs = <span class="function">processor</span>(images=image, return_tensors=<span class="string">"pt"</span>)
+
+<span class="comment"># Extract visual features</span>
+<span class="keyword">with</span> <span class="function">torch.no_grad</span>():
+    outputs = <span class="function">model</span>(**inputs)
+features = outputs.last_hidden_state[0]
+
+<span class="function">print</span>(<span class="string">f"Extracted features shape: {features.shape}"</span>)</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Citation ========== -->
+    <section id="citation" class="citation-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Reference</div>
+                <h2 class="section-title">📝 Citation</h2>
+                <div class="section-divider"></div>
+            </div>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem;">
+                If you find this work useful, please cite our papers:
+            </p>
+            <div class="citation-cards">
+                <!-- RICE -->
+                <div class="citation-card fade-in">
+                    <div class="citation-header" data-toggle="cite-rice">
+                        <h4>
+                            RICE — Region-based Cluster Discrimination
+                            <span class="venue-tag venue-iccv">ICCV 2025</span>
+                        </h4>
+                        <button class="citation-copy" data-cite="cite-rice-text" type="button"><i class="fas fa-copy"></i></button>
+                    </div>
+                    <div class="citation-body">
+                        <pre id="cite-rice-text">@inproceedings{yinxie_2025_rice,
+  title={Region-based Cluster Discrimination for Visual Representation Learning},
+  author={Xie, Yin and Yang, Kaicheng and An, Xiang and Wu, Kun and Zhao, Yongle and Deng, Weimo and Ran, Zimin and Wang, Yumeng and Feng, Ziyong And Roy, Miles And Ismail, Elezi And Deng, Jiankang},
+  booktitle={ICCV},
+  year={2025}
+}</pre>
+                    </div>
+                </div>
+
+                <!-- MLCD -->
+                <div class="citation-card fade-in">
+                    <div class="citation-header" data-toggle="cite-mlcd">
+                        <h4>
+                            MLCD — Multi-label Cluster Discrimination
+                            <span class="venue-tag venue-eccv">ECCV 2024</span>
+                        </h4>
+                        <button class="citation-copy" data-cite="cite-mlcd-text" type="button"><i class="fas fa-copy"></i></button>
+                    </div>
+                    <div class="citation-body">
+                        <pre id="cite-mlcd-text">@inproceedings{anxiang_2024_mlcd,
+  title={Multi-label Cluster Discrimination for Visual Representation Learning},
+  author={An, Xiang and Yang, Kaicheng and Dai, Xiangzi and Feng, Ziyong and Deng, Jiankang},
+  booktitle={ECCV},
+  year={2024}
+}</pre>
+                    </div>
+                </div>
+
+                <!-- UNICOM -->
+                <div class="citation-card fade-in">
+                    <div class="citation-header" data-toggle="cite-unicom">
+                        <h4>
+                            UNICOM — Universal and Compact Representation Learning
+                            <span class="venue-tag venue-iclr">ICLR 2023</span>
+                        </h4>
+                        <button class="citation-copy" data-cite="cite-unicom-text" type="button"><i class="fas fa-copy"></i></button>
+                    </div>
+                    <div class="citation-body">
+                        <pre id="cite-unicom-text">@inproceedings{anxiang_2023_unicom,
+  title={Unicom: Universal and Compact Representation Learning for Image Retrieval},
+  author={An, Xiang and Deng, Jiankang and Yang, Kaicheng and Li, Jiawei and Feng, Ziyong and Guo, Jia and Yang, Jing and Liu, Tongliang},
+  booktitle={ICLR},
+  year={2023}
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Footer ========== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://arxiv.org/abs/2507.20025" target="_blank">
+                    <i class="ai ai-arxiv"></i> Paper
+                </a>
+                <a href="https://huggingface.co/DeepGlint-AI" target="_blank">
+                    🤗 HuggingFace
+                </a>
+                <a href="https://github.com/deepglint/MVT" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://github.com/deepglint/unicom" target="_blank">
+                    <i class="fab fa-github"></i> Code (UNICOM)
+                </a>
+            </div>
+            <p class="footer-note">
+                RICE &amp; MVT Series &copy; 2025 DeepGlint &amp; Imperial College London. Website built for academic purposes.
+            </p>
+        </div>
+    </footer>
+
+    <!-- ========== JavaScript ========== -->
+    <script>
+        // Code tabs switching
+        document.querySelectorAll('.code-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+
+                // Update tabs
+                document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + target).classList.add('active');
+            });
+        });
+
+        // Copy buttons for code blocks
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.dataset.target;
+                const codeEl = document.getElementById(targetId);
+                const text = codeEl.textContent;
+
+                navigator.clipboard.writeText(text).then(() => {
+                    const icon = btn.querySelector('i');
+                    icon.className = 'fas fa-check';
+                    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                    }, 2000);
+                });
+            });
+        });
+
+        // Copy buttons for citations
+        document.querySelectorAll('.citation-copy').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const targetId = btn.dataset.cite;
+                const citeEl = document.getElementById(targetId);
+                const text = citeEl.textContent;
+
+                navigator.clipboard.writeText(text).then(() => {
+                    const icon = btn.querySelector('i');
+                    icon.className = 'fas fa-check';
+                    setTimeout(() => {
+                        icon.className = 'fas fa-copy';
+                    }, 2000);
+                });
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Navbar shadow on scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 10) {
+                navbar.style.boxShadow = 'var(--shadow)';
+            } else {
+                navbar.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
