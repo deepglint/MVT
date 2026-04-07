@@ -1,0 +1,3655 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      RICE: Region-based Cluster Discrimination for Visual Representation
+      Learning
+    </title>
+    <meta
+      name="description"
+      content="RICE — Region-based Cluster Discrimination for Visual Representation Learning. Accepted to ICCV 2025."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Noto+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css"
+    />
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      :root {
+        --results-block-width: 920px;
+      }
+
+      body {
+        font-family:
+          "Noto Sans",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        color: #1a1a1a;
+        background: #ffffff;
+        line-height: 1.8;
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .container {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+
+      .container-wide {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+
+      /* ========== Hero ========== */
+      .hero {
+        padding: 5rem 0 2.5rem;
+        text-align: center;
+      }
+
+      .hero-meta {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 1.25rem;
+        margin-bottom: 0;
+      }
+
+      .hero h1 {
+        font-family: "Source Serif 4", Georgia, serif;
+        font-size: clamp(1.75rem, 4vw, 2.6rem);
+        font-weight: 700;
+        line-height: 1.25;
+        color: #1a1a1a;
+        max-width: 720px;
+        margin: 0 auto 0;
+        letter-spacing: -0.01em;
+      }
+
+      /* ========== Link Bar ========== */
+      .link-bar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem 1.75rem;
+        padding-bottom: 2.5rem;
+        border-bottom: 1px solid #e5e5e5;
+      }
+
+      .link-bar a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #1a1a1a;
+        text-decoration: none;
+        padding: 0.3rem 0;
+      }
+
+      .link-bar a:hover {
+        color: #000;
+        text-decoration: underline;
+      }
+
+      .link-bar a .icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+      }
+
+      .link-bar a .icon img {
+        width: 18px;
+        height: 18px;
+      }
+
+      .link-bar a .arrow {
+        font-size: 0.7rem;
+        opacity: 0.4;
+        margin-left: 0.1rem;
+      }
+
+      /* ========== Authors ========== */
+      .authors-section {
+        padding: 2rem 0;
+        border-bottom: 1px solid #e5e5e5;
+      }
+
+      .authors-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.25rem 0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: #1a1a1a;
+        text-align: center;
+      }
+
+      .authors-list .author-item {
+        white-space: nowrap;
+      }
+
+      .authors-list .author-item::after {
+        content: ",\00a0";
+      }
+
+      .authors-list .author-item:last-child::after {
+        content: "";
+      }
+
+      .authors-list .sup {
+        font-size: 0.7em;
+        vertical-align: super;
+        color: #999;
+      }
+
+      .affiliations {
+        text-align: center;
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 0.5rem;
+      }
+
+      /* ========== Prose ========== */
+      .prose {
+        padding: 2.5rem 0;
+      }
+
+      .prose h2 {
+        font-family: "Source Serif 4", Georgia, serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #1a1a1a;
+      }
+
+      .prose h3 {
+        font-family: "Source Serif 4", Georgia, serif;
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin: 2rem 0 0.75rem;
+        color: #1a1a1a;
+      }
+
+      .prose p {
+        margin-bottom: 1.25rem;
+        color: #333;
+      }
+
+      .prose p:last-child {
+        margin-bottom: 0;
+      }
+
+      .prose strong {
+        color: #1a1a1a;
+        font-weight: 600;
+      }
+
+      .prose ul {
+        margin: 0.75rem 0 1.25rem 1.25rem;
+        color: #333;
+      }
+
+      .prose ul li {
+        margin-bottom: 0.35rem;
+      }
+
+      /* ========== Figures ========== */
+      .figure {
+        margin: 2rem 0;
+      }
+
+      .figure img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 4px;
+      }
+
+      .figure figcaption {
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 0.75rem;
+        line-height: 1.6;
+      }
+
+      .figure figcaption strong {
+        color: #333;
+      }
+
+      .rice-architecture {
+        margin: 3rem 0;
+        font-family:
+          "Noto Sans",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+      }
+      .rice-architecture-canvas {
+        overflow: visible;
+        padding-bottom: 1rem;
+        margin: 0;
+      }
+      .rice-diagram {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+      }
+      .diagram-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        opacity: 0;
+        transform: translateY(15px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .rice-architecture.is-visible .diagram-col {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .rice-architecture.is-visible .delay-1 {
+        transition-delay: 0.05s;
+      }
+      .rice-architecture.is-visible .delay-2 {
+        transition-delay: 0.15s;
+      }
+      .rice-architecture.is-visible .delay-3 {
+        transition-delay: 0.25s;
+      }
+      .rice-architecture.is-visible .delay-4 {
+        transition-delay: 0.35s;
+      }
+      .rice-architecture.is-visible .delay-5 {
+        transition-delay: 0.45s;
+      }
+      .rice-architecture.is-visible .delay-6 {
+        transition-delay: 0.55s;
+      }
+      .rice-architecture.is-visible .delay-7 {
+        transition-delay: 0.65s;
+      }
+
+      .diagram-arrow {
+        color: #9ca3af;
+        font-size: 1.5rem;
+        font-family: system-ui, sans-serif;
+        font-weight: 300;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .rice-architecture.is-visible .diagram-arrow {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .diagram-arrow.down {
+        transform: translateY(-10px);
+        margin: -0.25rem 0;
+      }
+      .rice-architecture.is-visible .diagram-arrow.down {
+        transform: translateY(0);
+      }
+
+      /* Image representation */
+      .img-repr {
+        width: 60px;
+        height: 60px;
+        background: #f8fafc;
+        border: 2px solid #cbd5e1;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+        border-radius: 4px;
+      }
+      .scan-line {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(56, 189, 248, 0.4),
+          transparent
+        );
+      }
+      .rice-architecture.is-visible .scan-line {
+        animation: scan 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+      @keyframes scan {
+        0% {
+          left: -100%;
+        }
+        50%,
+        100% {
+          left: 200%;
+        }
+      }
+
+      /* ViT representation */
+      .vit-layers {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .vit-layer {
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        padding: 0.4rem;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        color: #334155;
+        width: 100%;
+        font-weight: 500;
+      }
+
+      /* Grid representation */
+      .grid-repr {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        width: 60px;
+        height: 60px;
+        background: #e2e8f0;
+        border: 1px solid #e2e8f0;
+        margin: 0 auto;
+      }
+      .grid-cell {
+        background: #ffffff;
+        transition: background 0.5s;
+      }
+      .rice-architecture.is-visible .grid-cell.pulse-1 {
+        animation: pulse1 2s infinite alternate;
+      }
+      .rice-architecture.is-visible .grid-cell.pulse-2 {
+        animation: pulse2 2.5s infinite alternate;
+      }
+      @keyframes pulse1 {
+        100% {
+          background: #fef3c7;
+        }
+      }
+      @keyframes pulse2 {
+        100% {
+          background: #dcfce7;
+        }
+      }
+
+      /* Region Processing */
+      .region-step {
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        padding: 0.75rem 0.55rem;
+        border-radius: 4px;
+      }
+      .step-text {
+        font-size: 0.75rem;
+        color: #1e293b;
+        font-weight: 600;
+        line-height: 1.4;
+      }
+      .step-text .subtext {
+        font-size: 0.65rem;
+        color: #64748b;
+        font-weight: 400;
+        margin-top: 0.25rem;
+        display: block;
+      }
+      .token-group {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 0.85rem;
+      }
+      .token-badge {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.6rem;
+        padding: 0.25rem 0.4rem;
+        border-radius: 4px;
+        color: #fff;
+        font-weight: 500;
+      }
+      .token-badge.obj {
+        background: #d97706;
+      }
+      .token-badge.ocr {
+        background: #059669;
+      }
+
+      /* Branches */
+      .unified-branches-box {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+      }
+      .branches-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .branch-box {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        padding: 0.75rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        text-align: center;
+      }
+      .branch-box.obj-branch {
+        border-top: 3px solid #d97706;
+      }
+      .branch-box.ocr-branch {
+        border-top: 3px solid #059669;
+      }
+
+      .branch-title {
+        font-family: "Source Serif 4", Georgia, serif;
+        font-weight: 600;
+        font-size: 0.8rem;
+        color: #111827;
+        margin-bottom: 0.5rem;
+      }
+      .branch-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .loss-type {
+        font-size: 0.7rem;
+        color: #4b5563;
+        line-height: 1.3;
+      }
+      .loss-target {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        padding: 0.4rem;
+        border-radius: 4px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.65rem;
+        color: #111827;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        font-weight: 500;
+      }
+
+      .rice-architecture figcaption {
+        opacity: 0;
+        transition: opacity 0.6s ease 0.8s;
+        margin-top: 1rem;
+      }
+      .rice-architecture.is-visible figcaption {
+        opacity: 1;
+      }
+
+      /* Export Controls */
+      .export-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        justify-content: flex-end;
+        font-family: "Noto Sans", sans-serif;
+      }
+      .export-panel {
+        display: none;
+        margin-top: 0.8rem;
+        padding: 0.85rem 0.95rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #fafafa;
+      }
+      .export-panel.is-visible {
+        display: block;
+      }
+      .export-panel-status {
+        font-size: 0.82rem;
+        color: #4b5563;
+        margin-bottom: 0.65rem;
+      }
+      .export-panel-note {
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-bottom: 0.65rem;
+        line-height: 1.55;
+      }
+      .export-panel-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .export-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.45rem 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        background: #ffffff;
+        color: #334155;
+        font-size: 0.78rem;
+        font-weight: 500;
+        text-decoration: none;
+      }
+      .export-link:hover {
+        background: #f8fafc;
+        text-decoration: none;
+      }
+      .export-dismiss {
+        border: none;
+        background: transparent;
+        color: #6b7280;
+        font-size: 0.78rem;
+        cursor: pointer;
+        padding: 0.45rem 0.15rem;
+      }
+      .export-dismiss:hover {
+        color: #111827;
+      }
+      .export-btn {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        color: #334155;
+        padding: 0.4rem 0.75rem;
+        font-size: 0.75rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+      .export-btn:hover {
+        background: #f8fafc;
+        border-color: #94a3b8;
+        color: #0f172a;
+      }
+      .export-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+      .export-btn i {
+        font-size: 0.8rem;
+      }
+
+      /* Improved Architecture Styling */
+      .rice-architecture-canvas {
+        background: #ffffff;
+        border: none;
+        border-radius: 0;
+        padding: 1.5rem 0 0.5rem;
+        position: relative;
+        margin-bottom: 0.5rem;
+      }
+      .diagram-box {
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        border-radius: 6px;
+        padding: 1rem 0.75rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        transition: none;
+        width: 160px;
+        text-align: center;
+        position: relative;
+      }
+      .diagram-box:hover {
+        transform: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        border-color: #e5e7eb;
+      }
+      .diagram-box.wide {
+        width: 210px;
+      }
+      .diagram-box.wider {
+        width: 250px;
+      }
+      .box-header {
+        font-family: "Source Serif 4", Georgia, serif;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: none;
+        letter-spacing: 0;
+        color: #111827;
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+      }
+      .box-caption {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.65rem;
+        color: #6b7280;
+        margin-top: 0.75rem;
+      }
+
+      /* ========== Table ========== */
+      .table-wrapper {
+        margin: 2rem 0;
+        overflow-x: auto;
+      }
+
+      .clean-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+
+      .clean-table thead th {
+        text-align: left;
+        padding: 0.75rem 1rem;
+        font-weight: 600;
+        color: #666;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        border-bottom: 2px solid #e5e5e5;
+      }
+
+      .clean-table tbody td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #f0f0f0;
+        color: #333;
+      }
+
+      .clean-table tbody tr:hover td {
+        background: #fafafa;
+      }
+
+      .clean-table .model-name {
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+
+      .clean-table .dl-link {
+        color: #1a1a1a;
+        font-weight: 500;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .clean-table .dl-link:hover {
+        color: #000;
+      }
+
+      .howto-details {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #fafafa;
+        margin-top: 1rem;
+        overflow: hidden;
+      }
+
+      .howto-summary {
+        list-style: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.95rem 1rem;
+        font-family: "Source Serif 4", Georgia, serif;
+        font-size: 1rem;
+        color: #1a1a1a;
+        background: #fff;
+      }
+
+      .howto-summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .howto-summary::after {
+        content: "+";
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1rem;
+        color: #6b7280;
+      }
+
+      .howto-details[open] .howto-summary::after {
+        content: "−";
+      }
+
+      .howto-body {
+        padding: 0 1rem 1rem;
+      }
+
+      .howto-body p {
+        margin: 0 0 0.9rem;
+        font-size: 0.92rem;
+        color: #4b5563;
+      }
+
+      .howto-code {
+        background: #f5f5f5;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 1rem 1rem 0.9rem;
+        position: relative;
+        overflow-x: auto;
+      }
+
+      .howto-code pre {
+        margin: 0;
+        white-space: pre;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.76rem;
+        line-height: 1.65;
+        color: #374151;
+      }
+
+      .container-full {
+        width: 100%;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: center;
+      }
+
+      .results-table-wrap {
+        width: min(var(--results-block-width), calc(100vw - 4rem));
+        overflow-x: auto;
+        margin: 1.5rem auto;
+        max-width: 100%;
+      }
+
+      .results-table {
+        border-collapse: collapse;
+        font-family: "Source Serif 4", Georgia, serif;
+        font-size: 13.2px;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.4;
+        width: 100%;
+        min-width: var(--results-block-width);
+        margin: 0 auto;
+      }
+
+      .results-table th,
+      .results-table td {
+        padding: 3px 4px;
+        text-align: center;
+        vertical-align: bottom;
+        font-weight: normal;
+      }
+
+      .results-table th:nth-child(1),
+      .results-table td:nth-child(1) {
+        text-align: left;
+        padding-left: 0;
+        min-width: 100px;
+        color: #1a1a1a;
+        padding-right: 8px;
+      }
+      .results-table th:nth-child(2),
+      .results-table td:nth-child(2) {
+        text-align: left;
+        min-width: 155px;
+        color: #444;
+        padding-right: 8px;
+      }
+
+      .results-table thead tr.rule-top th {
+        border-top: 2px solid #1a1a1a;
+        padding-top: 6px;
+      }
+      .results-table thead tr.rule-mid th {
+        border-bottom: 1px solid #1a1a1a;
+      }
+      .results-table tbody tr.rule-sec td {
+        border-top: 1px solid #e5e5e5;
+      }
+      .results-table tbody tr.rule-bot td {
+        border-bottom: 2px solid #1a1a1a;
+        padding-bottom: 6px;
+      }
+
+      .results-table .grp {
+        font-weight: 600;
+        font-size: 13.5px;
+        text-align: center;
+        border-bottom: 1px solid #1a1a1a;
+        padding-bottom: 4px;
+      }
+
+      .results-table .rot-cell {
+        vertical-align: bottom;
+        height: 80px;
+        padding-bottom: 4px;
+      }
+      .results-table .rot-cell > div {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        display: inline-block;
+        text-align: left;
+        font-size: 12.5px;
+        line-height: 1.1;
+        color: #444;
+      }
+
+      .results-table .b {
+        font-weight: 700;
+        color: #000;
+      }
+      .results-table tr.hl td {
+        background: rgba(245, 238, 217, 0.6);
+      }
+      .results-table .sep-left {
+        border-left: 1px solid #e5e5e5;
+      }
+
+      .seg-results-table {
+        width: 100%;
+        min-width: var(--results-block-width);
+        table-layout: fixed;
+        margin: 0 auto;
+      }
+
+      .seg-results-table tbody td:nth-child(1),
+      .seg-results-table thead tr.rule-mid th:nth-child(1) {
+        text-align: left;
+        padding-left: 0;
+        width: 175px;
+        color: #1a1a1a;
+        padding-right: 8px;
+      }
+      .seg-results-table tbody td:nth-child(2),
+      .seg-results-table thead tr.rule-mid th:nth-child(2) {
+        text-align: left;
+        width: 140px;
+        color: #444;
+        padding-right: 8px;
+      }
+      .seg-results-table tbody td:nth-child(3),
+      .seg-results-table thead tr.rule-mid th:nth-child(3) {
+        text-align: left;
+        width: 140px;
+        color: #444;
+        padding-right: 8px;
+      }
+      .seg-results-table thead tr.rule-top th.grp {
+        text-align: center;
+        padding-left: 0;
+      }
+      .seg-results-table thead tr.rule-top th.grp:first-child {
+        text-align: left;
+      }
+      .seg-results-table tbody td:nth-child(4),
+      .seg-results-table thead tr.rule-mid th:nth-child(4),
+      .seg-results-table tbody td:nth-child(5),
+      .seg-results-table thead tr.rule-mid th:nth-child(5),
+      .seg-results-table tbody td:nth-child(6),
+      .seg-results-table thead tr.rule-mid th:nth-child(6),
+      .seg-results-table tbody td:nth-child(7),
+      .seg-results-table thead tr.rule-mid th:nth-child(7),
+      .seg-results-table tbody td:nth-child(8),
+      .seg-results-table thead tr.rule-mid th:nth-child(8),
+      .seg-results-table tbody td:nth-child(9),
+      .seg-results-table thead tr.rule-mid th:nth-child(9) {
+        width: 60px;
+      }
+      .seg-results-table tbody td:nth-child(10),
+      .seg-results-table thead tr.rule-mid th:nth-child(10),
+      .seg-results-table tbody td:nth-child(11),
+      .seg-results-table thead tr.rule-mid th:nth-child(11) {
+        width: 60px;
+      }
+
+      .seg-results-table th.sub-hd {
+        color: #444;
+        font-weight: normal;
+        vertical-align: bottom;
+        padding-bottom: 4px;
+      }
+
+      .seg-results-table tr.section-row td {
+        text-align: left;
+        font-weight: 600;
+        padding: 10px 0 4px 0;
+        background: #fafafa;
+        color: #1a1a1a;
+        font-size: 13.5px;
+      }
+
+      .seg-results-table tr.improve-row td:first-child {
+        text-align: left;
+        color: #059669;
+        font-size: 12.5px;
+        font-style: italic;
+        white-space: nowrap;
+        padding-left: 0;
+        padding-right: 8px;
+      }
+
+      .seg-results-table tr.improve-row td:not(:first-child) {
+        text-align: center;
+        color: #059669;
+        font-size: 12.5px;
+        font-style: italic;
+        min-width: auto;
+        padding-right: 4px;
+      }
+
+      .seg-results-table tr.improve-row td.b {
+        color: #059669;
+      }
+
+      .seg-results-table tbody tr:last-child td {
+        border-bottom: 2px solid #1a1a1a;
+        padding-bottom: 6px;
+      }
+
+      .probe-results-table {
+        width: 100%;
+        min-width: var(--results-block-width);
+        table-layout: fixed;
+        margin: 0 auto;
+      }
+
+      .probe-results-table tbody td:nth-child(1),
+      .probe-results-table thead tr.rule-mid th:nth-child(1) {
+        text-align: left;
+        padding-left: 0;
+        width: 100px;
+        color: #1a1a1a;
+        padding-right: 8px;
+      }
+      .probe-results-table tbody td:nth-child(2),
+      .probe-results-table thead tr.rule-mid th:nth-child(2) {
+        text-align: left;
+        width: 100px;
+        color: #444;
+        padding-right: 8px;
+      }
+      .probe-results-table tbody td:nth-child(3),
+      .probe-results-table thead tr.rule-mid th:nth-child(3) {
+        text-align: left;
+        width: 60px;
+        color: #444;
+        padding-right: 8px;
+      }
+      .probe-results-table tbody td:nth-child(4),
+      .probe-results-table thead tr.rule-mid th:nth-child(4),
+      .probe-results-table tbody td:nth-child(5),
+      .probe-results-table thead tr.rule-mid th:nth-child(5),
+      .probe-results-table tbody td:nth-child(6),
+      .probe-results-table thead tr.rule-mid th:nth-child(6),
+      .probe-results-table tbody td:nth-child(7),
+      .probe-results-table thead tr.rule-mid th:nth-child(7),
+      .probe-results-table tbody td:nth-child(8),
+      .probe-results-table thead tr.rule-mid th:nth-child(8),
+      .probe-results-table tbody td:nth-child(9),
+      .probe-results-table thead tr.rule-mid th:nth-child(9),
+      .probe-results-table tbody td:nth-child(10),
+      .probe-results-table thead tr.rule-mid th:nth-child(10),
+      .probe-results-table tbody td:nth-child(11),
+      .probe-results-table thead tr.rule-mid th:nth-child(11),
+      .probe-results-table tbody td:nth-child(12),
+      .probe-results-table thead tr.rule-mid th:nth-child(12),
+      .probe-results-table tbody td:nth-child(13),
+      .probe-results-table thead tr.rule-mid th:nth-child(13),
+      .probe-results-table tbody td:nth-child(14),
+      .probe-results-table thead tr.rule-mid th:nth-child(14),
+      .probe-results-table tbody td:nth-child(15),
+      .probe-results-table thead tr.rule-mid th:nth-child(15) {
+        width: 55px;
+      }
+
+      .probe-results-table th.sub-hd {
+        color: #444;
+        font-weight: normal;
+        vertical-align: bottom;
+        padding-bottom: 4px;
+      }
+
+      .probe-results-table tbody tr:last-child td {
+        border-bottom: 2px solid #1a1a1a;
+        padding-bottom: 6px;
+      }
+
+      /* ========== Animations ========== */
+      .figure-animate {
+        opacity: 0;
+        transform: translateY(15px);
+        transition:
+          opacity 0.8s ease-out,
+          transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      .figure-animate.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .figure-animate figcaption {
+        opacity: 0;
+        transition: opacity 0.6s ease-out 0.4s;
+      }
+
+      .figure-animate.is-visible figcaption {
+        opacity: 1;
+      }
+
+      /* ========== Citation ========== */
+      .citation-block {
+        background: #f9f9f9;
+        border-radius: 6px;
+        padding: 1.25rem 1.5rem;
+        position: relative;
+        width: min(var(--results-block-width), calc(100vw - 4rem));
+        max-width: none;
+        margin: 1.5rem 0 0;
+        left: 50%;
+        transform: translateX(-50%);
+        overflow-x: auto;
+      }
+
+      .citation-block pre {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.78rem;
+        line-height: 1.6;
+        color: #444;
+        white-space: pre;
+        margin: 0;
+      }
+
+      .cite-copy {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        background: none;
+        color: #999;
+        border: none;
+        font-size: 0.8rem;
+        cursor: pointer;
+        padding: 0.2rem;
+      }
+
+      .cite-copy:hover {
+        color: #1a1a1a;
+      }
+
+      /* ========== Section Divider ========== */
+      .divider {
+        border: none;
+        border-top: 1px solid #e5e5e5;
+        margin: 0;
+      }
+
+      /* ========== Footer ========== */
+      .footer {
+        padding: 3rem 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #999;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .footer-links a {
+        color: #666;
+        font-weight: 500;
+      }
+
+      .footer-links a:hover {
+        color: #1a1a1a;
+      }
+
+      /* ========== Responsive ========== */
+      @media (max-width: 900px) {
+        .rice-diagram {
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .diagram-col {
+          gap: 1.25rem;
+          width: 100%;
+          align-items: center;
+        }
+        .diagram-box,
+        .diagram-box.wide,
+        .diagram-box.wider {
+          width: 100%;
+          max-width: 340px;
+        }
+        .diagram-arrow {
+          transform: rotate(90deg) translateX(-10px);
+          margin: 0.25rem 0;
+          height: 40px;
+        }
+        .rice-architecture.is-visible .diagram-arrow {
+          transform: rotate(90deg) translateX(0);
+        }
+        .diagram-arrow.down {
+          transform: rotate(0) translateY(-10px);
+        }
+        .rice-architecture.is-visible .diagram-arrow.down {
+          transform: rotate(0) translateY(0);
+        }
+        .rice-architecture-canvas {
+          padding: 1.5rem 1rem 0.75rem;
+          border: none;
+        }
+        .export-controls {
+          justify-content: center;
+        }
+        .export-btn {
+          flex: 1 1 calc(50% - 0.25rem);
+          justify-content: center;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .hero {
+          padding: 3.5rem 0 2rem;
+        }
+        .hero h1 {
+          font-size: 1.5rem;
+        }
+        .link-bar {
+          gap: 0.4rem 1.25rem;
+        }
+        .link-bar a {
+          font-size: 0.8rem;
+        }
+        .diagram-box,
+        .diagram-box.wide,
+        .diagram-box.wider {
+          max-width: 100%;
+        }
+        .step-text {
+          font-size: 0.72rem;
+        }
+        .step-text .subtext,
+        .loss-target,
+        .box-caption {
+          font-size: 0.62rem;
+        }
+        .token-group {
+          flex-direction: column;
+          gap: 0.35rem;
+        }
+        .export-controls {
+          gap: 0.4rem;
+          justify-content: stretch;
+        }
+        .export-btn {
+          flex: 1 1 100%;
+          width: 100%;
+        }
+      }
+
+      /* ========== LLaVA Pipeline & Enhancements ========== */
+      .llava-pipeline {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        margin: 2.5rem 0 0.5rem;
+        font-family: "Noto Sans", sans-serif;
+      }
+      .pipeline-node {
+        padding: 1.25rem 1.5rem;
+        border-radius: 6px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        text-align: center;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        position: relative;
+        min-width: 175px;
+        z-index: 2;
+      }
+      .pipeline-node.vit {
+        border-top: 3px solid #3b82f6;
+        color: #1e3a8a;
+      }
+      .pipeline-node.llm {
+        border-top: 3px solid #64748b;
+        color: #334155;
+      }
+      .pipeline-node.output {
+        border-top: 3px solid #10b981;
+        color: #064e3b;
+      }
+      .pipeline-node .subtext {
+        display: block;
+        font-size: 0.8rem;
+        color: #6b7280;
+        font-weight: 400;
+        margin-top: 0.35rem;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .pipeline-arrow {
+        color: #cbd5e1;
+        font-size: 1.75rem;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        z-index: 1;
+      }
+      .flow-dot {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #3b82f6;
+        left: 0;
+        opacity: 0;
+      }
+      .flow-dot-2 {
+        background: #64748b;
+      }
+
+      .pipeline-node.sam {
+        border-top: 3px solid #8b5cf6;
+        color: #4c1d95;
+      }
+      .pipeline-node.detector {
+        border-top: 3px solid #f59e0b;
+        color: #78350f;
+      }
+      .pipeline-node.tracker {
+        border-top: 3px solid #0ea5e9;
+        color: #082f49;
+      }
+
+      .tracking-results-table {
+        width: 100%;
+        min-width: var(--results-block-width);
+        table-layout: fixed;
+        margin: 0 auto;
+      }
+
+      .tracking-results-table tbody td:nth-child(1),
+      .tracking-results-table thead tr.rule-mid th:nth-child(1) {
+        text-align: left;
+        padding-left: 0;
+        width: 100px;
+        color: #1a1a1a;
+        padding-right: 8px;
+      }
+      .tracking-results-table tbody td:nth-child(2),
+      .tracking-results-table thead tr.rule-mid th:nth-child(2),
+      .tracking-results-table tbody td:nth-child(3),
+      .tracking-results-table thead tr.rule-mid th:nth-child(3),
+      .tracking-results-table tbody td:nth-child(4),
+      .tracking-results-table thead tr.rule-mid th:nth-child(4),
+      .tracking-results-table tbody td:nth-child(5),
+      .tracking-results-table thead tr.rule-mid th:nth-child(5),
+      .tracking-results-table tbody td:nth-child(6),
+      .tracking-results-table thead tr.rule-mid th:nth-child(6),
+      .tracking-results-table tbody td:nth-child(7),
+      .tracking-results-table thead tr.rule-mid th:nth-child(7),
+      .tracking-results-table tbody td:nth-child(8),
+      .tracking-results-table thead tr.rule-mid th:nth-child(8),
+      .tracking-results-table tbody td:nth-child(9),
+      .tracking-results-table thead tr.rule-mid th:nth-child(9),
+      .tracking-results-table tbody td:nth-child(10),
+      .tracking-results-table thead tr.rule-mid th:nth-child(10),
+      .tracking-results-table tbody td:nth-child(11),
+      .tracking-results-table thead tr.rule-mid th:nth-child(11),
+      .tracking-results-table tbody td:nth-child(12),
+      .tracking-results-table thead tr.rule-mid th:nth-child(12),
+      .tracking-results-table tbody td:nth-child(13),
+      .tracking-results-table thead tr.rule-mid th:nth-child(13) {
+        width: 68px;
+      }
+
+      .tracking-results-table th.sub-hd {
+        color: #444;
+        font-weight: normal;
+        vertical-align: bottom;
+        padding-bottom: 4px;
+      }
+
+      .tracking-results-table tbody tr:last-child td {
+        border-bottom: 2px solid #1a1a1a;
+        padding-bottom: 6px;
+      }
+
+      .flow-dot-3 {
+        background: #8b5cf6;
+      }
+      .llava-pipeline-4.is-visible .flow-dot {
+        animation: pipeFlow 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+      .llava-pipeline-4.is-visible .flow-dot-2 {
+        animation: pipeFlow 3s cubic-bezier(0.4, 0, 0.2, 1) infinite 1s;
+      }
+      .llava-pipeline-4.is-visible .flow-dot-3 {
+        animation: pipeFlow 3s cubic-bezier(0.4, 0, 0.2, 1) infinite 2s;
+      }
+
+      .llava-pipeline.is-visible .flow-dot {
+        animation: pipeFlow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+      .llava-pipeline.is-visible .flow-dot-2 {
+        animation: pipeFlow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite 1s;
+      }
+      @keyframes pipeFlow {
+        0% {
+          transform: translateX(-10px);
+          opacity: 0;
+        }
+        20% {
+          opacity: 1;
+        }
+        80% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateX(25px);
+          opacity: 0;
+        }
+      }
+      @media (max-width: 640px) {
+        .llava-pipeline {
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .pipeline-arrow {
+          transform: rotate(90deg);
+          height: 30px;
+        }
+        @keyframes pipeFlow {
+          0% {
+            transform: translateY(-10px);
+            opacity: 0;
+          }
+          20% {
+            opacity: 1;
+          }
+          80% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(25px);
+            opacity: 0;
+          }
+        }
+      }
+
+      /* Architecture Extra Animation */
+      .diagram-arrow {
+        position: relative;
+      }
+      .arch-flow-dot {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: #94a3b8;
+        border-radius: 50%;
+        left: 50%;
+        margin-left: -3px;
+        opacity: 0;
+        top: 50%;
+        margin-top: -3px;
+        z-index: -1;
+      }
+      .diagram-arrow.down .arch-flow-dot {
+        left: 50%;
+        top: 50%;
+      }
+      .rice-architecture.is-visible .diagram-arrow > .arch-flow-dot {
+        animation: archFlow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+      .rice-architecture.is-visible .diagram-arrow.down > .arch-flow-dot {
+        animation: archFlowDown 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+      @keyframes archFlow {
+        0% {
+          transform: translateX(-15px);
+          opacity: 0;
+        }
+        20% {
+          opacity: 0.8;
+        }
+        80% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateX(15px);
+          opacity: 0;
+        }
+      }
+      @keyframes archFlowDown {
+        0% {
+          transform: translateY(-15px);
+          opacity: 0;
+        }
+        20% {
+          opacity: 0.8;
+        }
+        80% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateY(15px);
+          opacity: 0;
+        }
+      }
+      .rice-architecture.is-visible .token-badge.obj {
+        animation: pulseObj 3s infinite alternate 0.5s;
+      }
+      .rice-architecture.is-visible .token-badge.ocr {
+        animation: pulseOcr 3s infinite alternate 1.5s;
+      }
+      @keyframes pulseObj {
+        0%,
+        50% {
+          box-shadow: 0 0 0 0 rgba(217, 119, 6, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.25);
+        }
+      }
+      @keyframes pulseOcr {
+        0%,
+        50% {
+          box-shadow: 0 0 0 0 rgba(5, 150, 105, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.25);
+        }
+      }
+
+      /* ========== Mini-Pipeline Concrete Motifs ========== */
+      .node-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 28px;
+        margin: 0 auto 0.6rem auto;
+      }
+      /* ViT Token Grid */
+      .mini-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 8px);
+        grid-template-rows: repeat(3, 8px);
+        gap: 2px;
+      }
+      .mini-grid span {
+        background: #bfdbfe;
+        border-radius: 1px;
+        transition: background 0.3s;
+      }
+      .pipeline-node.vit:hover .mini-grid span {
+        background: #93c5fd;
+      }
+      .pipeline-node.vit:hover .mini-grid span:nth-child(even) {
+        background: #3b82f6;
+      }
+
+      /* LLM Stacked Lines */
+      .mini-lines {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        width: 24px;
+      }
+      .mini-lines span {
+        height: 3px;
+        background: #cbd5e1;
+        border-radius: 2px;
+        transition:
+          width 0.3s,
+          background 0.3s;
+      }
+      .mini-lines span:nth-child(2) {
+        width: 75%;
+      }
+      .mini-lines span:nth-child(3) {
+        width: 50%;
+      }
+      .pipeline-node.llm:hover .mini-lines span {
+        background: #64748b;
+      }
+      .pipeline-node.llm:hover .mini-lines span:nth-child(2) {
+        width: 90%;
+      }
+      .pipeline-node.llm:hover .mini-lines span:nth-child(3) {
+        width: 70%;
+      }
+
+      /* SAM Mask */
+      .mini-mask {
+        width: 24px;
+        height: 24px;
+        border: 1.5px dashed #c4b5fd;
+        border-radius: 40% 60% 70% 30%;
+        background: rgba(139, 92, 246, 0.1);
+        transition: all 0.5s;
+      }
+      .pipeline-node.sam:hover .mini-mask {
+        border-color: #8b5cf6;
+        background: rgba(139, 92, 246, 0.25);
+        border-radius: 50%;
+      }
+
+      /* Detector Bounding Box */
+      .mini-box {
+        width: 22px;
+        height: 22px;
+        border: 1.5px solid #fcd34d;
+        position: relative;
+        transition: border-color 0.3s;
+      }
+      .mini-box::before,
+      .mini-box::after {
+        content: "";
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #fcd34d;
+        transition: background 0.3s;
+      }
+      .mini-box::before {
+        top: -2px;
+        left: -2px;
+      }
+      .mini-box::after {
+        bottom: -2px;
+        right: -2px;
+      }
+      .pipeline-node.detector:hover .mini-box {
+        border-color: #f59e0b;
+      }
+      .pipeline-node.detector:hover .mini-box::before,
+      .pipeline-node.detector:hover .mini-box::after {
+        background: #f59e0b;
+      }
+
+      /* Tracker Trajectory */
+      .mini-track {
+        width: 32px;
+        height: 20px;
+        position: relative;
+      }
+      .mini-track::before {
+        content: "";
+        position: absolute;
+        top: 9px;
+        left: 0;
+        width: 100%;
+        height: 1.5px;
+        background-image: linear-gradient(
+          to right,
+          #bae6fd 40%,
+          transparent 40%
+        );
+        background-size: 6px 1px;
+        background-repeat: repeat-x;
+      }
+      .mini-track span {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: #38bdf8;
+        border-radius: 50%;
+        top: 6.5px;
+        transition:
+          transform 0.3s,
+          background 0.3s;
+      }
+      .mini-track span:nth-child(1) {
+        left: 0;
+        opacity: 0.4;
+      }
+      .mini-track span:nth-child(2) {
+        left: 13px;
+        opacity: 0.7;
+      }
+      .mini-track span:nth-child(3) {
+        left: 26px;
+        opacity: 1;
+      }
+      .pipeline-node.tracker:hover .mini-track span:nth-child(3) {
+        transform: scale(1.3);
+        background: #0ea5e9;
+      }
+
+      /* Output Score Chips */
+      .mini-chips {
+        display: flex;
+        gap: 3px;
+        align-items: flex-end;
+        height: 20px;
+      }
+      .mini-chips span {
+        width: 5px;
+        background: #6ee7b7;
+        border-radius: 1px 1px 0 0;
+        transition:
+          height 0.3s,
+          background 0.3s;
+      }
+      .mini-chips span:nth-child(1) {
+        height: 10px;
+      }
+      .mini-chips span:nth-child(2) {
+        height: 16px;
+      }
+      .mini-chips span:nth-child(3) {
+        height: 13px;
+      }
+      .mini-chips span:nth-child(4) {
+        height: 20px;
+      }
+      .pipeline-node.output:hover .mini-chips span {
+        background: #10b981;
+      }
+      .pipeline-node.output:hover .mini-chips span:nth-child(1) {
+        height: 14px;
+      }
+      .pipeline-node.output:hover .mini-chips span:nth-child(3) {
+        height: 18px;
+      }
+
+      /* Mobile overrides for Architecture arrows */
+      @media (max-width: 900px) {
+        .rice-architecture.is-visible .diagram-arrow > .arch-flow-dot {
+          animation: archFlowDown 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Hero -->
+    <div class="hero">
+      <div class="container">
+        <h1>RICE</h1>
+        <div class="hero-meta">ICCV 2025 · Highlight</div>
+      </div>
+
+      <!-- Link Bar -->
+      <div class="container">
+        <div class="link-bar">
+          <a href="https://arxiv.org/abs/2507.20025" target="_blank">
+            <span class="icon"
+              ><i class="ai ai-arxiv" style="font-size: 16px"></i
+            ></span>
+            Paper <span class="arrow">↗</span>
+          </a>
+          <a href="https://github.com/deepglint/unicom" target="_blank">
+            <span class="icon"
+              ><i class="fab fa-github" style="font-size: 16px"></i
+            ></span>
+            GitHub <span class="arrow">↗</span>
+          </a>
+          <a
+            href="https://huggingface.co/DeepGlint-AI/rice-vit-large-patch14-560"
+            target="_blank"
+          >
+            <span class="icon">🤗</span>
+            HuggingFace <span class="arrow">↗</span>
+          </a>
+          <a href="https://huggingface.co/DeepGlint-AI" target="_blank">
+            <span class="icon">🤗</span>
+            Model Zoo <span class="arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Authors -->
+    <div class="authors-section">
+      <div class="container">
+        <div class="authors-list">
+          <span class="author-item">Yin Xie<span class="sup">*1</span></span>
+          <span class="author-item"
+            >Kaicheng Yang<span class="sup">*1</span></span
+          >
+          <span class="author-item">Xiang An<span class="sup">*1</span></span>
+          <span class="author-item">Kun Wu<span class="sup">1</span></span>
+          <span class="author-item">Yongle Zhao<span class="sup">1</span></span>
+          <span class="author-item">Weimo Deng<span class="sup">1</span></span>
+          <span class="author-item">Zimin Ran<span class="sup">1</span></span>
+          <span class="author-item">Yumeng Wang<span class="sup">1</span></span>
+          <span class="author-item">Ziyong Feng<span class="sup">1</span></span>
+          <span class="author-item">Miles Roy<span class="sup">2</span></span>
+          <span class="author-item"
+            >Elezi Ismail<span class="sup">2</span></span
+          >
+          <span class="author-item"
+            >Jiankang Deng<span class="sup">2</span></span
+          >
+        </div>
+        <div class="affiliations">
+          <sup>1</sup> GlintLab &nbsp;&nbsp; <sup>2</sup> Imperial College
+          London &nbsp;&nbsp;
+          <span style="color: #aaa">* Equal contribution</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="container-wide">
+      <div class="prose">
+        <h2 id="how-to-use-it">How to use it</h2>
+        <details class="howto-details">
+          <summary class="howto-summary">Quickstart</summary>
+          <div class="howto-body">
+            <p>
+              Load the released RICE-ViT checkpoint from Hugging Face and
+              extract visual features in a few lines.
+            </p>
+            <div class="howto-code">
+              <button
+                class="cite-copy"
+                data-target="howto-code-rice"
+                type="button"
+              >
+                <i class="fas fa-copy"></i>
+              </button>
+              <pre id="howto-code-rice">
+from transformers import AutoModel, AutoProcessor
+from PIL import Image
+import requests
+import torch
+
+model = AutoModel.from_pretrained("DeepGlint-AI/rice-vit-large-patch14-560")
+processor = AutoProcessor.from_pretrained("DeepGlint-AI/rice-vit-large-patch14-560")
+
+url = "http://images.cocodataset.org/val2017/000000039769.jpg"
+image = Image.open(requests.get(url, stream=True).raw)
+inputs = processor(images=image, return_tensors="pt")
+
+with torch.no_grad():
+    outputs = model(**inputs)
+
+features = outputs.last_hidden_state[0]
+print(features.shape)</pre
+              >
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Adopted By -->
+    <div class="container-wide">
+      <div class="prose">
+        <h2 id="adopted-by">Adopted By</h2>
+        <p>RICE-ViT is used as the vision encoder in the following MLLMs:</p>
+        <div class="table-wrapper">
+          <table class="clean-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Organization</th>
+                <th style="text-align: right">Downloads / month</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a
+                    class="dl-link"
+                    href="https://huggingface.co/lmms-lab/LLaVA-OneVision-1.5-8B-Instruct"
+                    target="_blank"
+                    >LLaVA-OneVision-1.5-8B-Instruct</a
+                  >
+                </td>
+                <td>LMMs-Lab</td>
+                <td style="text-align: right">16,562</td>
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    class="dl-link"
+                    href="https://huggingface.co/nc-ai-consortium/VAETKI-VL-7B-A1B"
+                    target="_blank"
+                    >VAETKI-VL-7B-A1B</a
+                  >
+                </td>
+                <td>NC-AI Consortium</td>
+                <td style="text-align: right">949</td>
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    class="dl-link"
+                    href="https://huggingface.co/InnovatorLab/Innovator-VL-8B-Instruct"
+                    target="_blank"
+                    >Innovator-VL-8B-Instruct</a
+                  >
+                </td>
+                <td>InnovatorLab</td>
+                <td style="text-align: right">64</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="container-wide">
+      <div class="prose">
+        <p>
+          The <strong>Margin-based Vision Transformer (MVT)</strong> series
+          represents a family of state-of-the-art vision encoders designed for
+          universal visual representation learning. The latest version,
+          <strong>RICE (Region-based Cluster Discrimination)</strong>, advances
+          visual understanding by processing diverse semantic regions within
+          images using a single forward pass.
+        </p>
+        <p>
+          RICE introduces a novel approach to visual representation learning
+          that jointly captures
+          <strong>general visual semantics</strong> (objects, scenes),
+          <strong>OCR semantics</strong> (text within images), and
+          <strong>unified representations</strong> that seamlessly integrate
+          both modalities. This enables superior performance across multiple
+          vision tasks including image retrieval, visual question answering, and
+          multimodal understanding.
+        </p>
+        <h2 id="highlights">Highlights</h2>
+        <ul>
+          <li>
+            <strong>Region-based Processing</strong> — Processes diverse
+            semantic regions within images — including objects, scenes, and text
+            — using a single efficient forward pass through the vision
+            transformer.
+          </li>
+          <li>
+            <strong>Joint OCR & Visual Semantics</strong> — Uniquely captures
+            both general visual semantics and OCR semantics in a unified
+            representation, enabling richer multimodal understanding of image
+            content.
+          </li>
+          <li>
+            <strong>State-of-the-Art Performance</strong> — Achieves superior
+            results across multiple vision benchmarks including image retrieval,
+            VQA, and multimodal understanding tasks using the LLaVA-NeXT
+            framework.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Architecture -->
+    <div class="container-wide">
+      <div class="prose">
+        <h2 id="architecture">Architecture</h2>
+        <figure class="figure rice-architecture">
+          <div class="rice-architecture-canvas">
+            <div class="rice-architecture-visual rice-diagram">
+              <!-- Col 1: Input -->
+              <div class="diagram-col delay-1">
+                <div class="diagram-box">
+                  <div class="box-header">Input Image</div>
+                  <div class="img-repr" aria-hidden="true">
+                    <div class="scan-line"></div>
+                  </div>
+                  <div class="box-caption">H&times;W&times;3</div>
+                </div>
+              </div>
+
+              <div class="diagram-arrow delay-2">
+                &rarr;
+                <div class="arch-flow-dot"></div>
+              </div>
+
+              <!-- Col 2: ViT -->
+              <div class="diagram-col delay-3">
+                <div class="diagram-box">
+                  <div class="box-header">Vision Transformer</div>
+                  <div class="vit-layers">
+                    <div class="vit-layer">Single Forward Pass</div>
+                  </div>
+                </div>
+                <div class="diagram-arrow down delay-3">
+                  &darr;
+                  <div class="arch-flow-dot"></div>
+                </div>
+                <div class="diagram-box">
+                  <div class="box-header">Token Grid</div>
+                  <div class="grid-repr" aria-hidden="true">
+                    <div class="grid-cell pulse-1"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell pulse-2"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell pulse-1"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell pulse-2"></div>
+                    <div class="grid-cell pulse-2"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell pulse-1"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell pulse-2"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell pulse-1"></div>
+                  </div>
+                  <div class="box-caption">H&times;W + 1 (Class Token)</div>
+                </div>
+              </div>
+
+              <div class="diagram-arrow delay-4">
+                &rarr;
+                <div class="arch-flow-dot"></div>
+              </div>
+
+              <!-- Col 3: Region Processing -->
+              <div class="diagram-col delay-5">
+                <div class="diagram-box wide">
+                  <div class="box-header">Region Transformer</div>
+
+                  <div class="region-step">
+                    <div class="step-text">
+                      Sample Regions by Mask<br /><span class="subtext"
+                        >(ROI Align)</span
+                      >
+                    </div>
+                  </div>
+                  <div class="diagram-arrow down delay-5">
+                    &darr;
+                    <div class="arch-flow-dot"></div>
+                  </div>
+                  <div class="region-step">
+                    <div class="step-text">
+                      Region Attention<br /><span class="subtext"
+                        >Region-specific Visibility Mask</span
+                      >
+                    </div>
+                  </div>
+                  <div class="diagram-arrow down delay-5">
+                    &darr;
+                    <div class="arch-flow-dot"></div>
+                  </div>
+                  <div class="region-step tokens-step">
+                    <div class="step-text">Fixed-length Region Embeddings</div>
+                    <div class="token-group">
+                      <span class="token-badge obj">Object Tokens</span>
+                      <span class="token-badge ocr">OCR Tokens</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="diagram-arrow delay-6">
+                &rarr;
+                <div class="arch-flow-dot"></div>
+              </div>
+
+              <!-- Col 4: Supervision Branches -->
+              <div class="diagram-col delay-7 branch-col">
+                <div class="diagram-box wider unified-branches-box">
+                  <div class="box-header">Unified Supervision</div>
+                  <div class="branches-wrapper">
+                    <div class="branch-box obj-branch">
+                      <div class="branch-title">Object Region Loss</div>
+                      <div class="branch-content">
+                        <div class="loss-type">
+                          Single-label Cluster Discrimination
+                        </div>
+                        <div class="loss-target">Semantic Cluster Centers</div>
+                      </div>
+                    </div>
+                    <div class="branch-box ocr-branch">
+                      <div class="branch-title">OCR Region Loss</div>
+                      <div class="branch-content">
+                        <div class="loss-type">
+                          Multi-label Cluster Discrimination
+                        </div>
+                        <div class="loss-target">
+                          Vocabularies / Token Embeddings
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="export-controls">
+            <button
+              class="export-btn"
+              id="export-gif-btn"
+              title="Export as animated GIF with white background"
+            >
+              <i class="fas fa-film"></i> Export GIF (White)
+            </button>
+            <button
+              class="export-btn"
+              id="export-apng-btn"
+              title="Export as animated PNG with transparent background"
+            >
+              <i class="fas fa-images"></i> Export APNG (Transparent)
+            </button>
+          </div>
+          <div class="export-panel" id="export-panel">
+            <div class="export-panel-status" id="export-panel-status"></div>
+            <div class="export-panel-note" id="export-panel-note" hidden></div>
+            <div class="export-panel-actions">
+              <a
+                class="export-link"
+                id="export-download-link"
+                href="#"
+                download
+                hidden
+              >
+                <i class="fas fa-download"></i>
+                <span id="export-download-label">Download export</span>
+              </a>
+              <button
+                class="export-dismiss"
+                id="export-dismiss-btn"
+                type="button"
+                hidden
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+          <figcaption>
+            <strong>Figure 1.</strong> RICE architecture efficiently processes
+            diverse semantic regions within images using region-based cluster
+            discrimination. The model jointly captures general visual semantics,
+            OCR semantics, and unified representations in a single forward pass.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Results -->
+    <div class="container-wide">
+      <div class="prose">
+        <h2 id="llava-experimental-results">LLaVA Experimental Results</h2>
+        <p>
+          Comparison of RICE-ViT with other vision encoders using the LLaVA-NeXT
+          framework. All models are evaluated using identical configurations:
+          Qwen2.5-7B as the language model, LLaVA-NeXT training data, and the
+          same training pipeline. We adopt LLaVA-NeXT's tiling strategy (up to
+          2×2+1 tiles) for handling high-resolution images.
+        </p>
+        <div class="llava-pipeline figure-animate">
+          <div class="pipeline-node vit">
+            <div class="node-icon">
+              <div class="mini-grid">
+                <span></span><span></span><span></span><span></span><span></span
+                ><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+            RICE-ViT
+            <span class="subtext">Vision Encoder</span>
+          </div>
+          <div class="pipeline-arrow">
+            &rarr;
+            <div class="flow-dot"></div>
+          </div>
+          <div class="pipeline-node llm">
+            <div class="node-icon">
+              <div class="mini-lines">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            Qwen2.5-7B
+            <span class="subtext">Language Model</span>
+          </div>
+          <div class="pipeline-arrow">
+            &rarr;
+            <div class="flow-dot flow-dot-2"></div>
+          </div>
+          <div class="pipeline-node output">
+            <div class="node-icon">
+              <div class="mini-chips">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+            Benchmark Results
+            <span class="subtext">Output</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-full">
+      <div class="results-table-wrap">
+        <table class="results-table">
+          <thead>
+            <tr class="rule-top">
+              <th colspan="2" class="grp">Model Configuration</th>
+              <th class="sep-left grp" colspan="7">
+                OCR &amp; Document Understanding
+              </th>
+              <th class="sep-left grp" colspan="1">&nbsp;</th>
+              <th colspan="7" class="grp">General Vision Understanding</th>
+              <th class="sep-left grp" colspan="1">&nbsp;</th>
+            </tr>
+            <tr class="rule-mid">
+              <th style="vertical-align: bottom; font-weight: bold">Method</th>
+              <th style="vertical-align: bottom; font-weight: bold">
+                Vision Tower
+              </th>
+              <th class="rot-cell sep-left"><div>InfoVQA</div></th>
+              <th class="rot-cell"><div>DocVQA</div></th>
+              <th class="rot-cell"><div>ChartQA</div></th>
+              <th class="rot-cell"><div>TextVQA</div></th>
+              <th class="rot-cell"><div>OCRBench</div></th>
+              <th class="rot-cell"><div>OCRBenchV2</div></th>
+              <th class="rot-cell"><div>LiveXivQA</div></th>
+              <th class="rot-cell sep-left" style="font-weight: bold">
+                <div><b>OCR Avg</b></div>
+              </th>
+              <th class="rot-cell"><div>AI2D</div></th>
+              <th class="rot-cell">
+                <div>MMB<sup>EN</sup></div>
+              </th>
+              <th class="rot-cell">
+                <div>MME<sup>Cog</sup></div>
+              </th>
+              <th class="rot-cell">
+                <div>MME<sup>Per</sup></div>
+              </th>
+              <th class="rot-cell"><div>POPE</div></th>
+              <th class="rot-cell"><div>RealworldQA</div></th>
+              <th class="rot-cell"><div>MMStar</div></th>
+              <th class="rot-cell sep-left" style="font-weight: bold">
+                <div><b>Other Avg</b></div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="rule-sec">
+              <td>CLIP</td>
+              <td>ViT-L-14-336px</td>
+              <td class="sep-left">38.9</td>
+              <td>75.2</td>
+              <td>66.5</td>
+              <td>62.5</td>
+              <td>52.5</td>
+              <td>23.0</td>
+              <td>47.4</td>
+              <td class="sep-left">52.3</td>
+              <td>73.2</td>
+              <td>74.6</td>
+              <td>48.0</td>
+              <td>75.6</td>
+              <td>88.8</td>
+              <td>63.7</td>
+              <td>49.0</td>
+              <td class="sep-left">67.6</td>
+            </tr>
+            <tr>
+              <td>MLCD</td>
+              <td>ViT-L-14-336px</td>
+              <td class="sep-left">43.5</td>
+              <td>76.5</td>
+              <td>67.8</td>
+              <td>61.7</td>
+              <td>53.1</td>
+              <td>24.0</td>
+              <td>48.4</td>
+              <td class="sep-left">53.6</td>
+              <td>77.0</td>
+              <td>76.4</td>
+              <td>54.1</td>
+              <td>79.9</td>
+              <td>88.7</td>
+              <td>61.1</td>
+              <td>51.0</td>
+              <td class="sep-left">69.7</td>
+            </tr>
+            <tr>
+              <td>AIMv2</td>
+              <td>ViT-L-14-336px</td>
+              <td class="sep-left">35.4</td>
+              <td>77.2</td>
+              <td>72.7</td>
+              <td class="b">65.9</td>
+              <td>57.2</td>
+              <td>23.9</td>
+              <td>47.3</td>
+              <td class="sep-left">54.2</td>
+              <td>75.4</td>
+              <td class="b">78.6</td>
+              <td>48.3</td>
+              <td>75.0</td>
+              <td>88.4</td>
+              <td>62.2</td>
+              <td>50.2</td>
+              <td class="sep-left">68.3</td>
+            </tr>
+            <tr class="hl">
+              <td>RICE-ViT</td>
+              <td>ViT-L-14-336px</td>
+              <td class="sep-left b">45.2</td>
+              <td class="b">79.2</td>
+              <td>72.3</td>
+              <td class="b">65.9</td>
+              <td class="b">57.5</td>
+              <td class="b">24.1</td>
+              <td class="b">48.9</td>
+              <td class="sep-left b">56.2</td>
+              <td class="b">77.9</td>
+              <td>76.6</td>
+              <td class="b">54.6</td>
+              <td class="b">80.7</td>
+              <td class="b">88.5</td>
+              <td class="b">63.1</td>
+              <td class="b">51.8</td>
+              <td class="sep-left b">70.5</td>
+            </tr>
+            <tr class="rule-sec">
+              <td>DFN5B</td>
+              <td>ViT-H-14-378px</td>
+              <td class="sep-left">38.6</td>
+              <td>70.9</td>
+              <td>64.4</td>
+              <td>59.4</td>
+              <td>47.3</td>
+              <td>21.9</td>
+              <td>46.2</td>
+              <td class="sep-left">49.8</td>
+              <td>73.5</td>
+              <td>73.4</td>
+              <td>45.8</td>
+              <td>76.9</td>
+              <td>88.6</td>
+              <td>59.9</td>
+              <td>49.1</td>
+              <td class="sep-left">66.7</td>
+            </tr>
+            <tr>
+              <td>SigLIP</td>
+              <td>ViT-SO400M-14-384px</td>
+              <td class="sep-left">41.4</td>
+              <td>76.7</td>
+              <td>69.3</td>
+              <td>64.7</td>
+              <td>55.4</td>
+              <td>24.0</td>
+              <td>48.4</td>
+              <td class="sep-left">54.3</td>
+              <td>76.2</td>
+              <td>77.0</td>
+              <td>46.1</td>
+              <td>79.9</td>
+              <td>88.8</td>
+              <td>63.7</td>
+              <td>47.3</td>
+              <td class="sep-left">68.4</td>
+            </tr>
+            <tr>
+              <td>SigLIPv2</td>
+              <td>ViT-SO400M-14-384px</td>
+              <td class="sep-left">43.7</td>
+              <td>79.1</td>
+              <td>70.2</td>
+              <td>66.2</td>
+              <td>58.7</td>
+              <td>25.4</td>
+              <td>48.6</td>
+              <td class="sep-left">56.0</td>
+              <td class="b">77.0</td>
+              <td>77.1</td>
+              <td>46.6</td>
+              <td class="b">80.4</td>
+              <td class="b">89.3</td>
+              <td>63.4</td>
+              <td class="b">52.8</td>
+              <td class="sep-left">69.5</td>
+            </tr>
+            <tr class="hl">
+              <td>RICE-ViT</td>
+              <td>ViT-L-14-378px</td>
+              <td class="sep-left b">48.1</td>
+              <td class="b">82.6</td>
+              <td class="b">75.1</td>
+              <td class="b">66.2</td>
+              <td class="b">58.8</td>
+              <td class="b">25.8</td>
+              <td class="b">49.5</td>
+              <td class="sep-left b">58.0</td>
+              <td>76.5</td>
+              <td class="b">77.6</td>
+              <td class="b">54.1</td>
+              <td>79.0</td>
+              <td>89.1</td>
+              <td class="b">62.9</td>
+              <td>51.2</td>
+              <td class="sep-left b">70.1</td>
+            </tr>
+            <tr class="rule-sec">
+              <td>SigLIPv2</td>
+              <td>ViT-SO400M-16-560px</td>
+              <td class="sep-left">50.2</td>
+              <td>86.2</td>
+              <td>77.4</td>
+              <td>70.2</td>
+              <td>62.7</td>
+              <td>26.5</td>
+              <td>52.9</td>
+              <td class="sep-left">60.9</td>
+              <td>77.0</td>
+              <td>76.5</td>
+              <td>53.5</td>
+              <td>79.9</td>
+              <td>89.3</td>
+              <td>68.2</td>
+              <td>53.1</td>
+              <td class="sep-left">71.1</td>
+            </tr>
+            <tr class="hl">
+              <td>RICE-ViT</td>
+              <td>ViT-L-14-560px</td>
+              <td class="sep-left b">53.2</td>
+              <td class="b">87.4</td>
+              <td class="b">78.1</td>
+              <td>69.0</td>
+              <td>60.7</td>
+              <td>26.1</td>
+              <td class="b">53.0</td>
+              <td class="sep-left b">61.1</td>
+              <td>76.9</td>
+              <td class="b">78.6</td>
+              <td class="b">56.3</td>
+              <td>79.3</td>
+              <td>88.9</td>
+              <td>65.1</td>
+              <td>50.5</td>
+              <td class="sep-left">70.8</td>
+            </tr>
+            <tr>
+              <td>Qwen-ViT from Qwen2.5-VL 7B</td>
+              <td>ViT-H-14-560px</td>
+              <td class="sep-left">55.9</td>
+              <td>85.8</td>
+              <td>78.8</td>
+              <td>73.7</td>
+              <td>66.2</td>
+              <td>26.8</td>
+              <td>53.4</td>
+              <td class="sep-left">62.9</td>
+              <td>78.8</td>
+              <td>78.4</td>
+              <td class="b">62.0</td>
+              <td class="b">80.8</td>
+              <td>88.6</td>
+              <td>64.2</td>
+              <td>55.0</td>
+              <td class="sep-left">72.5</td>
+            </tr>
+            <tr class="hl rule-bot">
+              <td>RICE-ViT from OV-1.5 3B</td>
+              <td>ViT-L-14-560px</td>
+              <td class="sep-left b">53.7</td>
+              <td class="b">87.1</td>
+              <td class="b">81.9</td>
+              <td class="b">73.8</td>
+              <td class="b">73.3</td>
+              <td class="b">30.4</td>
+              <td class="b">53.6</td>
+              <td class="sep-left b">64.8</td>
+              <td class="b">80.3</td>
+              <td class="b">79.6</td>
+              <td>58.6</td>
+              <td>82.2</td>
+              <td class="b">89.0</td>
+              <td class="b">67.3</td>
+              <td class="b">56.6</td>
+              <td class="sep-left b">73.4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="container-wide">
+      <div class="prose">
+        <h2 id="referring-image-segmentation">Referring Image Segmentation</h2>
+        <p>
+          <strong>Table 2.</strong> Performance comparison of referring image
+          segmentation across vision-language models. Results are reported as
+          IoU scores (%) on the refCOCO, refCOCO+, and refCOCOg benchmarks. Our
+          RICE vision encoder consistently outperforms all competing approaches,
+          achieving state-of-the-art results across all benchmarks when
+          integrated with Qwen2.5-7B in the LLaVA-NeXT framework.
+        </p>
+        <div class="llava-pipeline llava-pipeline-4 figure-animate">
+          <div class="pipeline-node vit">
+            <div class="node-icon">
+              <div class="mini-grid">
+                <span></span><span></span><span></span><span></span><span></span
+                ><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+            RICE-ViT
+            <span class="subtext">Vision Encoder</span>
+          </div>
+          <div class="pipeline-arrow">
+            &rarr;
+            <div class="flow-dot"></div>
+          </div>
+          <div class="pipeline-node llm">
+            <div class="node-icon">
+              <div class="mini-lines">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            Qwen2.5-7B
+            <span class="subtext">Language Model</span>
+          </div>
+          <div class="pipeline-arrow">
+            &rarr;
+            <div class="flow-dot flow-dot-2"></div>
+          </div>
+          <div class="pipeline-node sam">
+            <div class="node-icon"><div class="mini-mask"></div></div>
+            SAM
+            <span class="subtext">Segment Anything</span>
+          </div>
+          <div class="pipeline-arrow">
+            &rarr;
+            <div class="flow-dot flow-dot-3"></div>
+          </div>
+          <div class="pipeline-node output">
+            <div class="node-icon">
+              <div class="mini-chips">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+            Segmentation Results
+            <span class="subtext">Output</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-full">
+      <div class="results-table-wrap">
+        <table class="results-table seg-results-table">
+          <thead>
+            <tr class="rule-top">
+              <th
+                colspan="3"
+                class="grp"
+                style="text-align: left; padding-left: 0"
+              >
+                Model Configuration
+              </th>
+              <th class="sep-left grp" colspan="3">refCOCO</th>
+              <th class="sep-left grp" colspan="3">refCOCO+</th>
+              <th class="sep-left grp" colspan="2">refCOCOg</th>
+            </tr>
+            <tr class="rule-mid">
+              <th style="vertical-align: bottom; font-weight: bold">
+                Vision Tower
+              </th>
+              <th style="vertical-align: bottom; font-weight: bold">LLM</th>
+              <th style="vertical-align: bottom; font-weight: bold">Method</th>
+              <th class="sep-left sub-hd">val</th>
+              <th class="sub-hd">testA</th>
+              <th class="sub-hd">testB</th>
+              <th class="sep-left sub-hd">val</th>
+              <th class="sub-hd">testA</th>
+              <th class="sub-hd">testB</th>
+              <th class="sep-left sub-hd">val</th>
+              <th class="sub-hd">test</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="rule-sec section-row">
+              <td colspan="11">Previous Methods</td>
+            </tr>
+            <tr>
+              <td>CLIP</td>
+              <td>Vicuna-7B</td>
+              <td>GLaMM</td>
+              <td class="sep-left">79.5</td>
+              <td>83.2</td>
+              <td>76.9</td>
+              <td class="sep-left">72.6</td>
+              <td>78.7</td>
+              <td>64.6</td>
+              <td class="sep-left">74.2</td>
+              <td>74.9</td>
+            </tr>
+            <tr>
+              <td>CLIP</td>
+              <td>Vicuna-7B</td>
+              <td>VisionLLMv2</td>
+              <td class="sep-left">79.2</td>
+              <td>82.3</td>
+              <td>77.0</td>
+              <td class="sep-left">68.9</td>
+              <td>75.8</td>
+              <td>61.8</td>
+              <td class="sep-left">73.3</td>
+              <td>74.8</td>
+            </tr>
+            <tr>
+              <td>CLIP</td>
+              <td>Vicuna-7B</td>
+              <td>LLaVA-G-7B</td>
+              <td class="sep-left">77.1</td>
+              <td>&ndash;</td>
+              <td>&ndash;</td>
+              <td class="sep-left">68.8</td>
+              <td>&ndash;</td>
+              <td>&ndash;</td>
+              <td class="sep-left">71.5</td>
+              <td>&ndash;</td>
+            </tr>
+            <tr>
+              <td>CLIP</td>
+              <td>LLaMA2-13B</td>
+              <td>GSVA</td>
+              <td class="sep-left">79.2</td>
+              <td>81.7</td>
+              <td>77.1</td>
+              <td class="sep-left">70.3</td>
+              <td>73.8</td>
+              <td>63.6</td>
+              <td class="sep-left">75.7</td>
+              <td>77.0</td>
+            </tr>
+            <tr>
+              <td>CLIP</td>
+              <td>LLaMA2-13B</td>
+              <td>PixelLM-7B</td>
+              <td class="sep-left">73.0</td>
+              <td>&ndash;</td>
+              <td>&ndash;</td>
+              <td class="sep-left">66.3</td>
+              <td>&ndash;</td>
+              <td>&ndash;</td>
+              <td class="sep-left">69.3</td>
+              <td>&ndash;</td>
+            </tr>
+            <tr>
+              <td>ConvNext-L</td>
+              <td>InternLM2-7B</td>
+              <td>OMG-LLaVA</td>
+              <td class="sep-left">77.2</td>
+              <td>79.8</td>
+              <td>74.1</td>
+              <td class="sep-left">68.7</td>
+              <td>73.0</td>
+              <td>61.6</td>
+              <td class="sep-left">71.7</td>
+              <td>71.9</td>
+            </tr>
+            <tr>
+              <td>InternViT2.5-300M</td>
+              <td>InternLM2.5-7B</td>
+              <td>Sa2VA</td>
+              <td class="sep-left">81.6</td>
+              <td>&ndash;</td>
+              <td>&ndash;</td>
+              <td class="sep-left">76.2</td>
+              <td>&ndash;</td>
+              <td>&ndash;</td>
+              <td class="sep-left">78.7</td>
+              <td>&ndash;</td>
+            </tr>
+            <tr>
+              <td>InternViT2.5-6B</td>
+              <td>InternLM2.5-20B</td>
+              <td>Sa2VA</td>
+              <td class="sep-left">82.5</td>
+              <td>&ndash;</td>
+              <td>&ndash;</td>
+              <td class="sep-left">78.8</td>
+              <td>&ndash;</td>
+              <td>&ndash;</td>
+              <td class="sep-left">79.7</td>
+              <td>&ndash;</td>
+            </tr>
+
+            <tr class="rule-sec section-row">
+              <td colspan="11">LLaVA-1.5 Framework</td>
+            </tr>
+            <tr>
+              <td>CLIP</td>
+              <td>Vicuna-7B</td>
+              <td>LISA</td>
+              <td class="sep-left">74.9</td>
+              <td>79.1</td>
+              <td>72.3</td>
+              <td class="sep-left">65.1</td>
+              <td>70.8</td>
+              <td>58.1</td>
+              <td class="sep-left">67.9</td>
+              <td>70.6</td>
+            </tr>
+            <tr class="hl">
+              <td class="b">RICE</td>
+              <td>Vicuna-7B</td>
+              <td>LISA</td>
+              <td class="sep-left b">76.3</td>
+              <td class="b">80.3</td>
+              <td class="b">75.1</td>
+              <td class="sep-left b">67.4</td>
+              <td class="b">72.7</td>
+              <td class="b">60.6</td>
+              <td class="sep-left b">69.0</td>
+              <td class="b">73.4</td>
+            </tr>
+            <tr class="improve-row">
+              <td colspan="3">Avg: +2.00 &uarr; Improvement over CLIP</td>
+              <td class="sep-left b">+1.4</td>
+              <td class="b">+1.2</td>
+              <td class="b">+2.8</td>
+              <td class="sep-left b">+2.3</td>
+              <td class="b">+1.9</td>
+              <td class="b">+2.5</td>
+              <td class="sep-left b">+1.1</td>
+              <td class="b">+2.8</td>
+            </tr>
+
+            <tr class="rule-sec section-row">
+              <td colspan="11">LLaVA-NeXT Framework</td>
+            </tr>
+            <tr>
+              <td>CLIP</td>
+              <td>Qwen2.5-7B</td>
+              <td>LISA</td>
+              <td class="sep-left">81.8</td>
+              <td>84.0</td>
+              <td>79.1</td>
+              <td class="sep-left">76.6</td>
+              <td>80.5</td>
+              <td>70.9</td>
+              <td class="sep-left">77.3</td>
+              <td>78.5</td>
+            </tr>
+            <tr>
+              <td>MLCD</td>
+              <td>Qwen2.5-7B</td>
+              <td>LISA</td>
+              <td class="sep-left">82.8</td>
+              <td>84.6</td>
+              <td>80.2</td>
+              <td class="sep-left">77.4</td>
+              <td>81.6</td>
+              <td>73.1</td>
+              <td class="sep-left">78.5</td>
+              <td>79.7</td>
+            </tr>
+            <tr class="hl">
+              <td class="b">RICE</td>
+              <td>Qwen2.5-7B</td>
+              <td>LISA</td>
+              <td class="sep-left b">83.5</td>
+              <td class="b">85.3</td>
+              <td class="b">81.7</td>
+              <td class="sep-left b">79.4</td>
+              <td class="b">82.8</td>
+              <td class="b">75.4</td>
+              <td class="sep-left b">79.8</td>
+              <td class="b">80.4</td>
+            </tr>
+            <tr class="improve-row">
+              <td colspan="3">Avg: +2.45 &uarr; Improvement over CLIP</td>
+              <td class="sep-left b">+1.7</td>
+              <td class="b">+1.3</td>
+              <td class="b">+2.6</td>
+              <td class="sep-left b">+2.8</td>
+              <td class="b">+2.3</td>
+              <td class="b">+4.5</td>
+              <td class="sep-left b">+2.5</td>
+              <td class="b">+1.9</td>
+            </tr>
+            <tr class="improve-row">
+              <td colspan="3">Avg: +1.30 &uarr; Improvement over MLCD</td>
+              <td class="sep-left b">+0.7</td>
+              <td class="b">+0.7</td>
+              <td class="b">+1.5</td>
+              <td class="sep-left b">+2.0</td>
+              <td class="b">+1.2</td>
+              <td class="b">+2.3</td>
+              <td class="sep-left b">+1.3</td>
+              <td class="b">+0.7</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="container-wide">
+      <div class="prose">
+        <h2 id="detection-probe">Detection Probe</h2>
+        <p>
+          We evaluate RICE against several state-of-the-art pretrained vision
+          encoders across multiple benchmarks. All evaluations are conducted
+          using the Cascade Mask R-CNN framework implemented in Detectron2.
+          Experiments are performed on the COCO and LVIS validation sets, and on
+          the Roboflow100 benchmarks. RICE achieves superior performance across
+          all evaluation metrics, highlighting its strong representational
+          quality for both natural images and specialized domains.
+        </p>
+
+        <div class="llava-pipeline figure-animate" style="margin-bottom: 2rem">
+          <div class="pipeline-node vit">
+            <div class="node-icon">
+              <div class="mini-grid">
+                <span></span><span></span><span></span><span></span><span></span
+                ><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+            RICE-ViT
+            <span class="subtext">Vision Encoder</span>
+          </div>
+          <div class="pipeline-arrow">
+            &rarr;
+            <div class="flow-dot"></div>
+          </div>
+          <div class="pipeline-node detector">
+            <div class="node-icon"><div class="mini-box"></div></div>
+            Cascade Mask R-CNN
+            <span class="subtext">Detector</span>
+          </div>
+          <div class="pipeline-arrow">
+            &rarr;
+            <div class="flow-dot flow-dot-2"></div>
+          </div>
+          <div class="pipeline-node output">
+            <div class="node-icon">
+              <div class="mini-chips">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+            COCO &middot; LVIS &middot; RF100
+            <span class="subtext">Output</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-full">
+      <div class="results-table-wrap">
+        <table class="results-table probe-results-table">
+          <thead>
+            <tr class="rule-top">
+              <th
+                colspan="3"
+                class="grp"
+                style="text-align: left; padding-left: 0"
+              >
+                Configuration
+              </th>
+              <th class="sep-left grp" colspan="2">COCO</th>
+              <th class="sep-left grp" colspan="2">LVIS</th>
+              <th class="sep-left grp" colspan="8">Roboflow100 Benchmarks</th>
+            </tr>
+            <tr class="rule-mid">
+              <th style="vertical-align: bottom; font-weight: bold">Method</th>
+              <th style="vertical-align: bottom; font-weight: bold">Arch</th>
+              <th style="vertical-align: bottom; font-weight: bold">Res</th>
+              <th class="sep-left sub-hd">Det AP</th>
+              <th class="sub-hd">Seg AP</th>
+              <th class="sep-left sub-hd">Det AP</th>
+              <th class="sub-hd">Seg AP</th>
+              <th class="sep-left rot-cell"><div>Aerial</div></th>
+              <th class="rot-cell"><div>Video Games</div></th>
+              <th class="rot-cell"><div>Microscopic</div></th>
+              <th class="rot-cell"><div>Under Water</div></th>
+              <th class="rot-cell"><div>Documents</div></th>
+              <th class="rot-cell"><div>Electromagnetic</div></th>
+              <th class="rot-cell"><div>Real world</div></th>
+              <th class="rot-cell" style="font-weight: bold">
+                <div><b>AVG</b></div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="rule-sec">
+              <td>DINOv2</td>
+              <td>ViT-B/14</td>
+              <td>518</td>
+              <td class="sep-left">31.6</td>
+              <td>24.3</td>
+              <td class="sep-left">18.7</td>
+              <td>14.1</td>
+              <td class="sep-left">2.3</td>
+              <td>14.3</td>
+              <td>10.6</td>
+              <td>19.9</td>
+              <td>18.8</td>
+              <td>15.3</td>
+              <td>26.8</td>
+              <td class="b">15.4</td>
+            </tr>
+            <tr>
+              <td>SigLIP</td>
+              <td>ViT-B/16</td>
+              <td>512</td>
+              <td class="sep-left">35.0</td>
+              <td>28.1</td>
+              <td class="sep-left">21.8</td>
+              <td>17.3</td>
+              <td class="sep-left">9.4</td>
+              <td>29.5</td>
+              <td>20.0</td>
+              <td>29.4</td>
+              <td>23.4</td>
+              <td>18.6</td>
+              <td>38.0</td>
+              <td class="b">24.1</td>
+            </tr>
+            <tr>
+              <td>MLCD</td>
+              <td>ViT-B/16</td>
+              <td>512</td>
+              <td class="sep-left">35.6</td>
+              <td>28.6</td>
+              <td class="sep-left">22.1</td>
+              <td>17.8</td>
+              <td class="sep-left">11.4</td>
+              <td>19.9</td>
+              <td>14.9</td>
+              <td>21.0</td>
+              <td>13.3</td>
+              <td>15.8</td>
+              <td>25.0</td>
+              <td class="b">17.3</td>
+            </tr>
+            <tr class="hl">
+              <td class="b">RICE</td>
+              <td>ViT-B/16</td>
+              <td>512</td>
+              <td class="sep-left b">38.9</td>
+              <td class="b">31.5</td>
+              <td class="sep-left b">26.5</td>
+              <td class="b">21.4</td>
+              <td class="sep-left b">14.9</td>
+              <td class="b">31.7</td>
+              <td class="b">23.4</td>
+              <td class="b">30.7</td>
+              <td class="b">27.0</td>
+              <td class="b">18.7</td>
+              <td class="b">39.1</td>
+              <td class="b">26.5</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="container-wide">
+      <div class="prose">
+        <h2 id="tracking-probe">Tracking Probe</h2>
+        <p>
+          We evaluate the temporal matching capability of local features within
+          the general video object tracking framework OSTrack, adopting an
+          attention probing approach to compare the four pre-trained models. Two
+          standard vision transformer blocks are inserted between the frozen
+          backbone and the prediction head to enhance information exchange
+          between the template and search images. As shown in Table 4, RICE
+          achieves the best performance across all metrics on LaSOT,
+          TrackingNet, GOT-10k, and TNL2k.
+        </p>
+        <div class="llava-pipeline figure-animate" style="margin-bottom: 2rem">
+          <div class="pipeline-node vit">
+            <div class="node-icon">
+              <div class="mini-grid">
+                <span></span><span></span><span></span><span></span><span></span
+                ><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+            RICE-ViT
+            <span class="subtext">Vision Encoder</span>
+          </div>
+          <div class="pipeline-arrow">
+            &rarr;
+            <div class="flow-dot"></div>
+          </div>
+          <div class="pipeline-node tracker">
+            <div class="node-icon">
+              <div class="mini-track">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            OSTrack
+            <span class="subtext">Tracker</span>
+          </div>
+          <div class="pipeline-arrow">
+            &rarr;
+            <div class="flow-dot flow-dot-2"></div>
+          </div>
+          <div class="pipeline-node output">
+            <div class="node-icon">
+              <div class="mini-chips">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+            LaSOT &middot; TrackingNet &middot; GOT-10k &middot; TNL2k
+            <span class="subtext">Output</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-full">
+      <div class="results-table-wrap">
+        <table class="results-table tracking-results-table">
+          <thead>
+            <tr class="rule-top">
+              <th class="grp" style="text-align: left; padding-left: 0">
+                &nbsp;
+              </th>
+              <th class="sep-left grp" colspan="3">LaSOT</th>
+              <th class="sep-left grp" colspan="3">TrackingNet</th>
+              <th class="sep-left grp" colspan="3">GOT-10k</th>
+              <th class="sep-left grp" colspan="3">TNL2k</th>
+            </tr>
+            <tr class="rule-mid">
+              <th style="vertical-align: bottom; font-weight: bold">Method</th>
+              <th class="sep-left sub-hd">Suc.</th>
+              <th class="sub-hd">Pre.</th>
+              <th class="sub-hd">Norm. Pre.</th>
+              <th class="sep-left sub-hd">Suc.</th>
+              <th class="sub-hd">Pre.</th>
+              <th class="sub-hd">Norm. Pre.</th>
+              <th class="sep-left sub-hd">AO</th>
+              <th class="sub-hd">SR-0.5</th>
+              <th class="sub-hd">SR-0.75</th>
+              <th class="sep-left sub-hd">Suc.</th>
+              <th class="sub-hd">Pre.</th>
+              <th class="sub-hd">Norm. Pre.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="rule-sec">
+              <td>DINOv2</td>
+              <td class="sep-left">55.11</td>
+              <td>54.99</td>
+              <td>65.52</td>
+              <td class="sep-left">71.20</td>
+              <td>64.70</td>
+              <td>77.70</td>
+              <td class="sep-left">53.60</td>
+              <td>64.90</td>
+              <td>35.50</td>
+              <td class="sep-left">41.95</td>
+              <td>36.03</td>
+              <td>57.40</td>
+            </tr>
+            <tr>
+              <td>SigLIP</td>
+              <td class="sep-left">55.52</td>
+              <td>56.16</td>
+              <td>65.33</td>
+              <td class="sep-left">72.60</td>
+              <td>66.70</td>
+              <td>78.70</td>
+              <td class="sep-left">53.50</td>
+              <td>63.10</td>
+              <td>35.40</td>
+              <td class="sep-left">43.90</td>
+              <td>39.06</td>
+              <td>59.03</td>
+            </tr>
+            <tr>
+              <td>MLCD</td>
+              <td class="sep-left">58.05</td>
+              <td>60.75</td>
+              <td>68.31</td>
+              <td class="sep-left">75.30</td>
+              <td>70.20</td>
+              <td>80.80</td>
+              <td class="sep-left">53.80</td>
+              <td>62.80</td>
+              <td>39.70</td>
+              <td class="sep-left">45.22</td>
+              <td>40.62</td>
+              <td>60.64</td>
+            </tr>
+            <tr class="hl">
+              <td class="b">RICE</td>
+              <td class="sep-left b">60.24</td>
+              <td class="b">63.16</td>
+              <td class="b">69.66</td>
+              <td class="sep-left b">76.30</td>
+              <td class="b">71.80</td>
+              <td class="b">81.30</td>
+              <td class="sep-left b">55.40</td>
+              <td class="b">63.50</td>
+              <td class="b">41.60</td>
+              <td class="sep-left b">45.70</td>
+              <td class="b">41.95</td>
+              <td class="b">61.18</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Visualization -->
+    <div class="container-wide">
+      <div class="prose">
+        <h2 id="visualization">Visualization</h2>
+        <figure class="figure figure-animate">
+          <img
+            src="https://github.com/user-attachments/assets/0ff3b764-c5b6-4a10-a63c-89ccbc99d06b"
+            alt="Semantic Feature Visualization"
+            loading="lazy"
+          />
+          <figcaption>
+            <strong>Figure 2.</strong> Semantic feature visualization using
+            2048-resolution images as input to ViT-B/16. Token features are
+            projected onto RGB channels via PCA. Sequential frames (arranged
+            vertically) show consistent attention on salient objects (ice
+            skaters, deers, motorcyclists, cyclists), with stable color patterns
+            maintained throughout the sequence.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <hr class="divider" />
+    <!-- Citation -->
+    <div class="container-wide">
+      <div class="prose">
+        <h2 id="citation">Citation</h2>
+        <p>If you find this work useful, please cite our paper:</p>
+        <div class="citation-block">
+          <button class="cite-copy" data-target="cite-rice" type="button">
+            <i class="fas fa-copy"></i>
+          </button>
+          <pre id="cite-rice">
+@inproceedings{yinxie_2025_rice,
+  title     = {Region-based Cluster Discrimination for Visual Representation Learning},
+  author    = {Xie, Yin and Yang, Kaicheng and An, Xiang and Wu, Kun and Zhao, Yongle and Deng, Weimo and Ran, Zimin and Wang, Yumeng and Feng, Ziyong and Roy, Miles and Ismail, Elezi and Deng, Jiankang},
+  booktitle = {ICCV},
+  year      = {2025}
+}</pre
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-links">
+          <a href="https://arxiv.org/abs/2507.20025" target="_blank">Paper</a>
+          <a href="https://huggingface.co/DeepGlint-AI" target="_blank"
+            >HuggingFace</a
+          >
+          <a href="https://github.com/deepglint/unicom" target="_blank"
+            >GitHub</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <!-- Export Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/upng-js@2.1.0/UPNG.min.js"></script>
+    <script>
+      if (!window.pako || !window.UPNG) {
+        throw new Error("pako/UPNG failed to load");
+      }
+
+      UPNG.decode._inflate = function (data) {
+        return window.pako.inflate(data);
+      };
+
+      UPNG.encode._filterZero = function (img, h, bpp, bpl, data) {
+        const fls = [];
+
+        for (let t = 0; t < 5; t++) {
+          if (h * bpl > 500000 && (t === 2 || t === 3 || t === 4)) continue;
+
+          for (let y = 0; y < h; y++) {
+            UPNG.encode._filterLine(data, img, y, bpl, bpp, t);
+          }
+
+          fls.push(window.pako.deflate(data));
+          if (bpp === 1) break;
+        }
+
+        let best = fls[0];
+        for (let i = 1; i < fls.length; i++) {
+          if (fls[i].length < best.length) best = fls[i];
+        }
+        return best;
+      };
+    </script>
+    <script>
+      // Copy citation
+      document.querySelectorAll(".cite-copy").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const text = document.getElementById(btn.dataset.target).textContent;
+          navigator.clipboard.writeText(text).then(() => {
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(
+              () => (btn.innerHTML = '<i class="fas fa-copy"></i>'),
+              2000,
+            );
+          });
+        });
+      });
+
+      // Intersection Observer for figure animations
+      document.addEventListener("DOMContentLoaded", () => {
+        const observerOptions = {
+          root: null,
+          rootMargin: "0px",
+          threshold: 0.15,
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        document
+          .querySelectorAll(".figure-animate, .rice-architecture")
+          .forEach((figure) => {
+            observer.observe(figure);
+          });
+
+        // Export Logic
+        const archFigure = document.querySelector(".rice-architecture");
+        const canvasEl = document.querySelector(".rice-architecture-canvas");
+        const gifBtn = document.getElementById("export-gif-btn");
+        const apngBtn = document.getElementById("export-apng-btn");
+        const exportPanel = document.getElementById("export-panel");
+        const exportPanelStatus = document.getElementById(
+          "export-panel-status",
+        );
+        const exportPanelNote = document.getElementById("export-panel-note");
+        const exportDownloadLink = document.getElementById(
+          "export-download-link",
+        );
+        const exportDownloadLabel = document.getElementById(
+          "export-download-label",
+        );
+        const exportDismissBtn = document.getElementById("export-dismiss-btn");
+        const GIF_BUTTON_HTML =
+          '<i class="fas fa-film"></i> Export GIF (White)';
+        const APNG_BUTTON_HTML =
+          '<i class="fas fa-images"></i> Export APNG (Transparent)';
+        const GIF_EXPORT_FRAME_COUNT = 12;
+        const GIF_EXPORT_PLAYBACK_DELAY = 110;
+        const GIF_CAPTURE_INTERVAL = 35;
+        const GIF_EXPORT_SCALE = 1.25;
+        const APNG_EXPORT_FRAME_COUNT = 24;
+        const APNG_EXPORT_PLAYBACK_DELAY = 90;
+        const APNG_CAPTURE_INTERVAL = 90;
+        const APNG_EXPORT_SCALE = 2;
+        let gifWorkerUrl = null;
+        let lastSavePickerError = null;
+
+        const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+        const nextFrame = () =>
+          new Promise((resolve) => requestAnimationFrame(() => resolve()));
+
+        function setExportButtonsDisabled(disabled) {
+          gifBtn.disabled = disabled;
+          apngBtn.disabled = disabled;
+        }
+
+        function setExportButtonLabel(button, label) {
+          button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${label}`;
+        }
+
+        function clearExportDownload() {
+          const previousUrl = exportDownloadLink.dataset.blobUrl;
+          if (previousUrl) {
+            URL.revokeObjectURL(previousUrl);
+            delete exportDownloadLink.dataset.blobUrl;
+          }
+          exportDownloadLink.removeAttribute("href");
+          exportDownloadLink.hidden = true;
+          exportDismissBtn.hidden = true;
+        }
+
+        function showExportPanel(message, downloadMeta = null, note = "") {
+          exportPanel.classList.add("is-visible");
+          exportPanelStatus.textContent = message;
+          exportPanelNote.textContent = note;
+          exportPanelNote.hidden = !note;
+          clearExportDownload();
+
+          if (downloadMeta) {
+            const { blob, filename, label } = downloadMeta;
+            const url = URL.createObjectURL(blob);
+            exportDownloadLink.href = url;
+            exportDownloadLink.download = filename;
+            exportDownloadLink.dataset.blobUrl = url;
+            exportDownloadLabel.textContent = label;
+            exportDownloadLink.hidden = false;
+            exportDismissBtn.hidden = false;
+          }
+        }
+
+        function resetExportButtons() {
+          gifBtn.innerHTML = GIF_BUTTON_HTML;
+          apngBtn.innerHTML = APNG_BUTTON_HTML;
+          setExportButtonsDisabled(false);
+        }
+
+        function supportsSavePicker() {
+          return (
+            window.isSecureContext &&
+            typeof window.showSaveFilePicker === "function"
+          );
+        }
+
+        async function requestSaveHandle({ filename, pickerTypes }) {
+          lastSavePickerError = null;
+
+          if (!supportsSavePicker()) {
+            return null;
+          }
+
+          try {
+            return await window.showSaveFilePicker({
+              suggestedName: filename,
+              types: pickerTypes,
+            });
+          } catch (error) {
+            const interceptedAbort =
+              error?.name === "AbortError" &&
+              typeof error?.message === "string" &&
+              error.message.includes("Intercepted");
+
+            if (interceptedAbort) {
+              lastSavePickerError = error;
+              return null;
+            }
+
+            if (
+              error?.name === "SecurityError" ||
+              error?.name === "NotAllowedError" ||
+              error?.name === "OperationError"
+            ) {
+              lastSavePickerError = error;
+              return null;
+            }
+
+            throw error;
+          }
+        }
+
+        async function deliverBlob(
+          blob,
+          { filename, label, fileHandle = null },
+        ) {
+          if (fileHandle) {
+            const writable = await fileHandle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+            showExportPanel(
+              `Saved: ${filename}`,
+              null,
+              "The file was written to the location you selected.",
+            );
+            return;
+          }
+
+          showExportPanel(
+            "Export ready. Use the button below to save it.",
+            {
+              blob,
+              filename,
+              label,
+            },
+            "Your browser did not open a native save dialog, so the export is available here as a direct download.",
+          );
+        }
+
+        function showPreparingPanel(formatLabel) {
+          const note = supportsSavePicker()
+            ? "A native save dialog should appear first. If it does not, or if the browser blocks it, this panel will provide a direct download button after export finishes."
+            : "This browser does not support the native save dialog here. After export finishes, a download button will appear below.";
+          showExportPanel(`Preparing ${formatLabel} export…`, null, note);
+        }
+
+        async function getGifWorkerUrl() {
+          if (gifWorkerUrl) return gifWorkerUrl;
+          const workerRes = await fetch(
+            "https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js",
+          );
+          const workerText = await workerRes.text();
+          const workerBlob = new Blob([workerText], {
+            type: "application/javascript",
+          });
+          gifWorkerUrl = URL.createObjectURL(workerBlob);
+          return gifWorkerUrl;
+        }
+
+        async function createExportClone(isTransparent) {
+          const exportHost = document.createElement("div");
+          exportHost.style.position = "fixed";
+          exportHost.style.left = "-200vw";
+          exportHost.style.top = "0";
+          exportHost.style.opacity = "0";
+          exportHost.style.pointerEvents = "none";
+          exportHost.style.zIndex = "-1";
+
+          const cloneFigure = archFigure.cloneNode(true);
+          cloneFigure.classList.remove("is-visible");
+          cloneFigure.style.width = `${canvasEl.getBoundingClientRect().width}px`;
+          cloneFigure.style.maxWidth = "none";
+          cloneFigure.querySelector(".export-controls")?.remove();
+
+          const cloneCanvasEl = cloneFigure.querySelector(
+            ".rice-architecture-canvas",
+          );
+          cloneCanvasEl.style.background = isTransparent
+            ? "transparent"
+            : "#ffffff";
+
+          exportHost.appendChild(cloneFigure);
+          document.body.appendChild(exportHost);
+
+          if (document.fonts?.ready) {
+            await document.fonts.ready;
+          }
+          await nextFrame();
+          await nextFrame();
+
+          cloneFigure.classList.add("is-visible");
+          await wait(1200);
+
+          return {
+            cloneCanvasEl,
+            cleanup() {
+              exportHost.remove();
+            },
+          };
+        }
+
+        async function captureFrames({
+          isTransparent,
+          frameCount,
+          sampleDelay,
+          scale,
+          onFrame,
+        }) {
+          const frames = [];
+          const exportClone = await createExportClone(isTransparent);
+
+          try {
+            for (let i = 0; i < frameCount; i++) {
+              onFrame?.(i + 1, frameCount);
+              const canvas = await html2canvas(exportClone.cloneCanvasEl, {
+                backgroundColor: isTransparent ? null : "#ffffff",
+                scale,
+                logging: false,
+                useCORS: true,
+                imageTimeout: 0,
+                foreignObjectRendering: true,
+              });
+              frames.push(canvas);
+              if (i < frameCount - 1 && sampleDelay > 0) {
+                await wait(sampleDelay);
+              }
+            }
+            return frames;
+          } finally {
+            exportClone.cleanup();
+          }
+        }
+
+        gifBtn.addEventListener("click", async () => {
+          setExportButtonsDisabled(true);
+          showPreparingPanel("GIF");
+          try {
+            const fileHandle = await requestSaveHandle({
+              filename: "rice-architecture-white.gif",
+              pickerTypes: [
+                {
+                  description: "Animated GIF",
+                  accept: { "image/gif": [".gif"] },
+                },
+              ],
+            });
+
+            if (fileHandle) {
+              showExportPanel(
+                "Saving white GIF…",
+                null,
+                "Save location selected. The file will be written there after encoding completes.",
+              );
+            } else if (lastSavePickerError) {
+              showExportPanel(
+                "Preparing GIF export…",
+                null,
+                "The native save dialog was blocked, so a direct download button will appear here after export finishes.",
+              );
+            }
+
+            const workerUrl = await getGifWorkerUrl();
+            const frames = await captureFrames({
+              isTransparent: false,
+              frameCount: GIF_EXPORT_FRAME_COUNT,
+              sampleDelay: GIF_CAPTURE_INTERVAL,
+              scale: GIF_EXPORT_SCALE,
+              onFrame: (current, total) => {
+                setExportButtonLabel(gifBtn, `Capturing ${current}/${total}`);
+              },
+            });
+
+            const gifBlob = await new Promise((resolve) => {
+              const gif = new GIF({
+                workers: 2,
+                quality: 10,
+                workerScript: workerUrl,
+                background: "#ffffff",
+                repeat: 0,
+                width: frames[0].width,
+                height: frames[0].height,
+              });
+
+              gif.on("progress", (progress) => {
+                setExportButtonLabel(
+                  gifBtn,
+                  `Encoding ${Math.max(1, Math.round(progress * 100))}%`,
+                );
+              });
+
+              gif.on("finished", (blob) => resolve(blob));
+
+              frames.forEach((canvas) => {
+                gif.addFrame(canvas, {
+                  delay: GIF_EXPORT_PLAYBACK_DELAY,
+                  copy: true,
+                });
+              });
+
+              gif.render();
+            });
+
+            await deliverBlob(gifBlob, {
+              filename: "rice-architecture-white.gif",
+              label: "Download GIF (White)",
+              fileHandle,
+            });
+          } catch (e) {
+            console.error(e);
+            if (e?.name === "AbortError") {
+              showExportPanel(
+                "GIF export canceled.",
+                null,
+                "No file was created.",
+              );
+            } else {
+              showExportPanel(
+                "GIF export failed. Please try again.",
+                null,
+                "If the native save dialog did not appear, retry and use the direct download button when it becomes available.",
+              );
+            }
+          } finally {
+            resetExportButtons();
+          }
+        });
+
+        apngBtn.addEventListener("click", async () => {
+          setExportButtonsDisabled(true);
+          showPreparingPanel("transparent APNG");
+          try {
+            const fileHandle = await requestSaveHandle({
+              filename: "rice-architecture-transparent.apng",
+              pickerTypes: [
+                {
+                  description: "Animated PNG",
+                  accept: { "image/png": [".apng", ".png"] },
+                },
+              ],
+            });
+
+            if (fileHandle) {
+              showExportPanel(
+                "Saving transparent APNG…",
+                null,
+                "Save location selected. The file will be written there after encoding completes.",
+              );
+            } else if (lastSavePickerError) {
+              showExportPanel(
+                "Preparing transparent APNG export…",
+                null,
+                "The native save dialog was blocked, so a direct download button will appear here after export finishes.",
+              );
+            }
+
+            const frames = await captureFrames({
+              isTransparent: true,
+              frameCount: APNG_EXPORT_FRAME_COUNT,
+              sampleDelay: APNG_CAPTURE_INTERVAL,
+              scale: APNG_EXPORT_SCALE,
+              onFrame: (current, total) => {
+                setExportButtonLabel(apngBtn, `Capturing ${current}/${total}`);
+              },
+            });
+
+            setExportButtonLabel(apngBtn, "Encoding APNG");
+
+            const width = frames[0].width;
+            const height = frames[0].height;
+            const frameData = [];
+            const delays = [];
+
+            frames.forEach((canvas) => {
+              const ctx = canvas.getContext("2d");
+              const imgData = ctx.getImageData(0, 0, width, height);
+              frameData.push(imgData.data.buffer);
+              delays.push(APNG_EXPORT_PLAYBACK_DELAY);
+            });
+
+            const apng = UPNG.encode(frameData, width, height, 0, delays);
+            const blob = new Blob([apng], { type: "image/apng" });
+            await deliverBlob(blob, {
+              filename: "rice-architecture-transparent.apng",
+              label: "Download APNG (Transparent)",
+              fileHandle,
+            });
+          } catch (e) {
+            console.error(e);
+            if (e?.name === "AbortError") {
+              showExportPanel(
+                "Transparent APNG export canceled.",
+                null,
+                "No file was created.",
+              );
+            } else {
+              showExportPanel(
+                "Transparent APNG export failed. Please try again.",
+                null,
+                "If the native save dialog did not appear, retry and use the direct download button when it becomes available.",
+              );
+            }
+          } finally {
+            resetExportButtons();
+          }
+        });
+
+        exportDismissBtn.addEventListener("click", () => {
+          exportPanel.classList.remove("is-visible");
+          exportPanelStatus.textContent = "";
+          exportPanelNote.textContent = "";
+          exportPanelNote.hidden = true;
+          clearExportDownload();
+        });
+      });
+    </script>
+  </body>
+</html>
